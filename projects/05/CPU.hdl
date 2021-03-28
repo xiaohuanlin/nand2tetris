@@ -39,16 +39,50 @@ CHIP CPU {
         pc[15];          // address of next instruction
 
     PARTS:
-    // register A
-    Mux16(a=instruction, b=aluOut, sel=instruction[0], out=registerA);
-    Register(in=registerA, load=false, out=nothing);
-
     // ALU
-    Register(in=registerA, load=true, out=registerAOut);
-    Mux16(a=registerAOut, b=inM, sel=instruction[3], out=ALUAM);
-    Register(in=registerD, load=true, out=registerDOut);
-    ALU(x=registerDOut, y=ALUAM, zx=instruction[4], nx=instruction[5], zy=instruction[6], ny=instruction[7], f=instruction[8], no=instruction[9], out=outM, zr=zr, ng=ng);
-    Register(in=outM, load=false, out=registerD);
+
+    // dest for A
+    // for A or C instruction
+    Mux16(a=instruction, b=out, sel=instruction[15], out=registerATmp);
+
+    // for load A
+    Not(in=instruction[15], out=not15);
+    Or(a=not15, b=instruction[5], out=loadA);
+    ARegister(in=registerATmp, load=loadA, out=registerAOut, out[0..14]=addressM);
+
+    // calculate for AM
+    Mux16(a=registerAOut, b=inM, sel=instruction[12], out=ALUAM);
+
+    // dest for D
+    And(a=instruction[15], b=instruction[4], out=loadD);
+    DRegister(in=out, load=loadD, out=registerDOut);
+
+    // for function keep D reigster not change
+    And(a=instruction[11], b=instruction[15], out=zx);
+    And(a=instruction[10], b=instruction[15], out=nx);
+    Or(a=instruction[9], b=not15, out=zy);
+    Or(a=instruction[8], b=not15, out=ny);
+    And(a=instruction[7], b=instruction[15], out=f);
+    And(a=instruction[6], b=instruction[15], out=no);
+
+    ALU(x=registerDOut, y=ALUAM, zx=zx, nx=nx, zy=zy, ny=ny, f=f, no=no, out=out, out=outM, zr=zr, ng=ng);
+
+    // writeM
+    And(a=instruction[15], b=instruction[3], out=writeM);
 
     // PC
+    // jump rules
+    // jump for negative out value
+    And(a=ng, b=instruction[2], out=tmp1);
+    // jump for zero out value
+    And(a=zr, b=instruction[1], out=tmp2);
+    // jump for positive out value
+    Or(a=ng, b=zr, out=tmp);
+    Not(in=tmp, out=tmpnot);
+    And(a=tmpnot, b=instruction[0], out=tmp3);
+    // jump?
+    Or(a=tmp1, b=tmp2, out=orTmp);
+    Or(a=orTmp, b=tmp3, out=jumpV);
+    And(a=jumpV, b=instruction[15], out=jump);
+    PC(in=registerAOut, load=jump, inc=true, reset=reset, out[0..14]=pc);
 }
