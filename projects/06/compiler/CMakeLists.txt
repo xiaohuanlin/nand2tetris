@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 project(Compiler)
-
-
-######## CTEST ########
-enable_testing()
+message("Generated with config types: ${CMAKE_BUILD_TYPE}")
 
 ######## GTEST ########
 # Download and unpack googletest at configure time
@@ -33,10 +30,17 @@ add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
 
 ####### compile option #######
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -Wall -Wextra -Werror -march=native")
+message(STATUS "Cpp compiler options ${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -ggdb")
+message(STATUS "Cpp compiler debug options ${CMAKE_CXX_FLAGS_DEBUG}")
 
 include_directories(
   ${PROJECT_SOURCE_DIR}/src/include
 )
 
 add_subdirectory(src)
-add_subdirectory(test)
+add_subdirectory(test EXCLUDE_FROM_ALL)
+
+add_executable(main src/main.cpp)
+target_link_libraries(main ${PROJECT_NAME})
