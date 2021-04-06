@@ -5,12 +5,12 @@
 
 #include "code_writer.hpp"
 
-void ReadDir(char* dir, std::vector<std::string>& files);
-void StoreFile(char* file, std::vector<std::string>& files) {
+void ReadDir(std::string dir, std::vector<std::string>& files);
+void StoreFile(std::string file, std::vector<std::string>& files) {
     struct stat buf;
 
-    if (stat(file, &buf) != 0) {
-        perror(file);
+    if (stat(file.c_str(), &buf) != 0) {
+        perror(file.c_str());
         return;
     }
 
@@ -32,20 +32,20 @@ void StoreFile(char* file, std::vector<std::string>& files) {
     }
 }
 
-void ReadDir(char* dir, std::vector<std::string>& files) {
+void ReadDir(std::string dir, std::vector<std::string>& files) {
     struct dirent* ent;
     DIR* dir_p;
 
-    if ((dir_p = opendir(dir)) == nullptr) {
+    if ((dir_p = opendir(dir.c_str())) == nullptr) {
         StoreFile(dir, files);
         return;
     }
 
     while ((ent = readdir(dir_p)) != nullptr) {
-        if (strcmp(ent->d_name, "..") || strcmp(ent->d_name, ".")) {
+        if (strcmp(ent->d_name, "..") == 0 || strcmp(ent->d_name, ".") == 0) {
             continue;
         }
-        StoreFile(ent->d_name, files);
+        StoreFile(dir + "/" + std::string(ent->d_name), files);
     }
 
     closedir(dir_p);
@@ -61,8 +61,13 @@ int main(int argc, char* argv[]) {
     std::vector<std::string> filenames;
     ReadDir(input_file_name_or_dir, filenames);
 
+    if (filenames.empty()) {
+        std::cout << "empty file or dir" << std::endl;
+        return 1;
+    }
+
     // set output file name
-    std::string base_out_file_name(input_file_name_or_dir);
+    std::string base_out_file_name(filenames[0]);
     std::size_t pos = base_out_file_name.length();
     if ((pos = base_out_file_name.find_last_of('.')) != std::string::npos) {
         base_out_file_name.erase(pos);
