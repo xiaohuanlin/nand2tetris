@@ -6,7 +6,13 @@ namespace vmtranslator {
     CodeWriter::CodeWriter(std::ostream* output): output_(output), can_delete_input_(false), address_(0) {
     }
     CodeWriter::CodeWriter(const std::string file): output_(nullptr), can_delete_input_(true), address_(0) {
-        SetFileName(file);
+        std::ofstream* open_file_p = new std::ofstream(file);
+        if (!open_file_p->is_open()) {
+            delete open_file_p;
+            throw std::exception();
+        }
+        can_delete_input_ = true;
+        output_ = open_file_p;
     }
 
     CodeWriter::~CodeWriter() {
@@ -14,17 +20,6 @@ namespace vmtranslator {
     };
 
     void CodeWriter::SetFileName(const std::string file_name) {
-        std::ofstream* open_file_p = new std::ofstream(file_name);
-        if (!open_file_p->is_open()) {
-            delete open_file_p;
-            throw std::exception();
-        }
-        can_delete_input_ = true;
-        if (output_ != nullptr) {
-            (*open_file_p) << output_->rdbuf();
-        }
-        output_ = open_file_p;
-
         // format file name
         size_t last_slash = file_name.find_last_of('/');
         if (last_slash == std::string::npos) {
@@ -38,7 +33,13 @@ namespace vmtranslator {
     };
 
     void CodeWriter::WriteInit() {
+        (*output_)  << "@256"   << std::endl
+                    << "D=A"    << std::endl
+                    << "@0"     << std::endl
+                    << "M=D"    << std::endl;
+        address_ += 4;
 
+        WriteCall("Sys.init", 0);
     };
 
     void CodeWriter::WriteArithmetic(const std::string command) {
@@ -224,7 +225,6 @@ namespace vmtranslator {
     void CodeWriter::WriteLabel(std::string symbol) {
         std::transform(symbol.begin(), symbol.end(), symbol.begin(), toupper);
         (*output_)  << "(" << symbol << ")" << std::endl;
-        address_ ++;
     }
 
     void CodeWriter::WriteGoto(std::string symbol) {
@@ -246,7 +246,9 @@ namespace vmtranslator {
 
     void CodeWriter::WriteCall(const std::string function_name, const int num_args) {
         // push return-address
-        (*output_) << "@" << function_name << ".RA" << std::endl
+        static int identifier = 0;
+        identifier++;
+        (*output_) << "@" << function_name << "." << identifier << std::endl
                    << "D=A"     << std::endl
                    << "@0"      << std::endl
                    << "A=M"     << std::endl
@@ -286,8 +288,7 @@ namespace vmtranslator {
                    << "0;JMP" << std::endl;
         address_ += 2;
         // (return-address)
-        (*output_) << "(" << function_name << ".RA)" << std::endl;
-        address_++;
+        (*output_) << "(" << function_name << "." << identifier << ")" << std::endl;
     }
 
     void CodeWriter::WriteReturn() {
@@ -295,7 +296,7 @@ namespace vmtranslator {
         (*output_)  << "@1"     << std::endl
                     << "D=M"    << std::endl
                     << "@13"    << std::endl
-                    << "AM=D"   << std::endl
+                    << "M=D"   << std::endl
                     // RET = *(FRAME-5)
                     << "@5"     << std::endl
                     << "A=D-A"  << std::endl

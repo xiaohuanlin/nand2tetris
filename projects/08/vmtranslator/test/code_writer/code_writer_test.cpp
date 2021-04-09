@@ -7,31 +7,6 @@
 
 namespace vmtranslator
 {
-    TEST(CodeWriterTest, OstreamToFile) {
-        std::stringbuf sb("");
-        std::ostream output(&sb);
-
-        CodeWriter code_writer(&output);
-        code_writer.WritePushpop(COMMAND::C_PUSH, "constant", 1);
-
-        std::string file_name = "./test.txt";
-        code_writer.SetFileName(file_name);
-        code_writer.Close();
-
-        std::ifstream file(file_name);
-        EXPECT_TRUE(file.is_open());
-        std::streambuf *buf = file.rdbuf();
-        std::streamsize size = buf->pubseekoff(0, file.end);
-        buf->pubseekoff(0, file.beg);
-        char* contents = new char [size + 1];
-        contents[size] = '\0';
-        buf->sgetn(contents, size);
-
-        ASSERT_STREQ("@1\nD=A\n@0\nA=M\nM=D\n@0\nM=M+1\n", contents);
-        file.close();
-        unlink(file_name.c_str());
-    }
-
     TEST(CodeWriterTest, WriteArithmeticCommand) {
         std::stringbuf sb("");
         std::ostream output(&sb);

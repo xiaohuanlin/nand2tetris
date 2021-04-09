@@ -152,14 +152,17 @@ namespace vmtranslator
     }
 
     bool Parser::IsValidFunctionCallCommand(const std::string& command) {
+        if (command == "return") {
+            return true;
+        }
         size_t pos = command.find_first_of(" ");
         if (pos == std::string::npos) {
             return false;
         }
         std::string command_type = std::string(command, 0, pos);
-        pos = command.find_last_of(" ");
-        std::string symbol = std::string(command, pos + 1);
-        return (command_type == "function" || command_type == "call" || command_type == "return") && IsValidSymbol(symbol);
+        size_t second_pos = command.find_last_of(" ");
+        std::string symbol = std::string(command, pos + 1, second_pos - pos - 1);
+        return (command_type == "function" || command_type == "call") && IsValidSymbol(symbol);
     }
 
     bool Parser::IsValidSymbol(const std::string symbol) {

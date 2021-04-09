@@ -116,6 +116,9 @@ namespace vmtranslator {
                 {"if-goto", COMMAND::C_IF},
                 {"goto", COMMAND::C_GOTO},
                 {"label", COMMAND::C_LABEL},
+                {"function", COMMAND::C_FUNCTION},
+                {"return", COMMAND::C_RETURN},
+                {"call", COMMAND::C_CALL},
             };
 
             // Code using for checking C command

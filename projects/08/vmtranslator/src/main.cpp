@@ -86,6 +86,7 @@ int main(int argc, char* argv[]) {
     code_writer.WriteInit();
 
     for (auto& file_name: filenames) {
+        code_writer.SetFileName(file_name);
         vmtranslator::Parser parser(file_name);
 
         // parse
@@ -112,6 +113,18 @@ int main(int argc, char* argv[]) {
                 }
                 case vmtranslator::COMMAND::C_LABEL: {
                     code_writer.WriteLabel(parser.GetArg1());
+                    break;
+                }
+                case vmtranslator::COMMAND::C_FUNCTION: {
+                    code_writer.WriteFunction(parser.GetArg1(), parser.GetArg2());
+                    break;
+                }
+                case vmtranslator::COMMAND::C_RETURN: {
+                    code_writer.WriteReturn();
+                    break;
+                }
+                case vmtranslator::COMMAND::C_CALL: {
+                    code_writer.WriteCall(parser.GetArg1(), parser.GetArg2());
                     break;
                 }
                 default:
