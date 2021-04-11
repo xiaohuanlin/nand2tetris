@@ -1,3 +1,5 @@
+#pragma once
+
 #include <fstream>
 #include <iostream>
 #include <tuple>
@@ -5,32 +7,9 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "utils/enum/enum.hpp"
+
 namespace vmtranslator {
-    
-    enum class COMMAND {
-        C_ARITHMETIC,
-        C_PUSH,
-        C_POP,
-        C_LABEL,
-        C_GOTO,
-        C_IF,
-        C_FUNCTION,
-        C_RETURN,
-        C_CALL,
-    };
-
-    enum class MEMORY_COMMAND {
-        ARGUMENT,
-        LOCAL,
-        STATIC,
-        CONSTANT,
-        THIS,
-        THAT,
-        POINTER,
-        TEMP
-    };
-
-    const static std::streamsize BUFFER_SIZE = 256;
 
     class Parser {
         public:
@@ -59,19 +38,19 @@ namespace vmtranslator {
             /**
              * Judge if the read line is a arithmetic command
              */
-            bool IsValidArithmeticCommand(const std::string& command);
+            bool IsValidArithmeticCommand();
             /**
              * Judge if the read line is a memory access command
              */
-            bool IsValidMemoryAccessCommand(const std::string& command);
+            bool IsValidMemoryAccessCommand();
             /**
              * Judge if the read line is a control flow command
              */
-            bool IsValidControlFlowCommand(const std::string& command);
+            bool IsValidControlFlowCommand();
             /**
              * Judge if the read line is a function call command
              */
-            bool IsValidFunctionCallCommand(const std::string& command);
+            bool IsValidFunctionCallCommand();
 
             /**
              * Judge if the symbol is valid 
@@ -88,38 +67,7 @@ namespace vmtranslator {
 
             // Current command string buffer
             char current_command_[BUFFER_SIZE];
-            // Valid arithmetic commands
-            std::unordered_set<std::string> arithmetic_commands_ {
-                "add",
-                "sub",
-                "neg",
-                "eq",
-                "gt",
-                "lt",
-                "and",
-                "or",
-                "not",
-            };
 
-            std::unordered_map<std::string, COMMAND> commands_form_ {
-                {"add", COMMAND::C_ARITHMETIC},
-                {"sub", COMMAND::C_ARITHMETIC},
-                {"neg", COMMAND::C_ARITHMETIC},
-                {"eq", COMMAND::C_ARITHMETIC},
-                {"gt", COMMAND::C_ARITHMETIC},
-                {"lt", COMMAND::C_ARITHMETIC},
-                {"and", COMMAND::C_ARITHMETIC},
-                {"or", COMMAND::C_ARITHMETIC},
-                {"not", COMMAND::C_ARITHMETIC},
-                {"push", COMMAND::C_PUSH},
-                {"pop", COMMAND::C_POP},
-                {"if-goto", COMMAND::C_IF},
-                {"goto", COMMAND::C_GOTO},
-                {"label", COMMAND::C_LABEL},
-                {"function", COMMAND::C_FUNCTION},
-                {"return", COMMAND::C_RETURN},
-                {"call", COMMAND::C_CALL},
-            };
 
             // Code using for checking C command
             bool can_delete_input_;

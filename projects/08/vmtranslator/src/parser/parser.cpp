@@ -1,12 +1,11 @@
 #include <algorithm>
 #include <vector>
 
-#include "parser.hpp"
+#include "parser/parser.hpp"
 
 namespace vmtranslator
 {
-    Parser::Parser(std::istream* input): input_(input), can_delete_input_(false) {
-    };
+    Parser::Parser(std::istream* input): input_(input), can_delete_input_(false) {};
 
     Parser::Parser(const std::string file): can_delete_input_(true) {
         std::ifstream* open_file_p = new std::ifstream(file);
@@ -62,29 +61,21 @@ namespace vmtranslator
             return false;
         }
 
-        if (IsValidArithmeticCommand(need_valid_str)) {
-            if (!ParseCommand(need_valid_str)) {
-                return false;
-            }
+        if (!ParseCommand(need_valid_str)) {
+            std::cerr << "Unknown command: " << need_valid_str << std::endl;
+            return false;
+        }
+
+        if (IsValidArithmeticCommand()) {
             arg1_ = need_valid_str;
             return true;
-        } else if (IsValidMemoryAccessCommand(need_valid_str)) {
-            if (!ParseCommand(need_valid_str)) {
-                return false;
-            }
-            return true;
-        } else if (IsValidControlFlowCommand(need_valid_str)) {
-            if (!ParseCommand(need_valid_str)) {
-                return false;
-            }
-            return true;
-        } else if (IsValidFunctionCallCommand(need_valid_str)) {
-            if (!ParseCommand(need_valid_str)) {
-                return false;
-            }
+        } else if (IsValidMemoryAccessCommand()
+                || IsValidControlFlowCommand()
+                || IsValidFunctionCallCommand()) {
             return true;
         }
 
+        std::cerr << "Unknown command: " << need_valid_str << std::endl;
         return false;
     }
 
@@ -97,8 +88,8 @@ namespace vmtranslator
             if (i == len || command[i] == ' ') {
                 if (index == 0) {
                     // for command_type
-                    auto iter = commands_form_.find(std::string(command, pos, i - pos));
-                    if (iter == commands_form_.end()) {
+                    auto iter = STRING_COMMAND.find(std::string(command, pos, i - pos));
+                    if (iter == STRING_COMMAND.end()) {
                         return false;
                     }
                     command_type_ = iter->second;
@@ -127,42 +118,23 @@ namespace vmtranslator
         return true;
     }
 
-    bool Parser::IsValidArithmeticCommand(const std::string& command) {
-        return arithmetic_commands_.find(command) != arithmetic_commands_.end();
+    bool Parser::IsValidArithmeticCommand() {
+        return command_type_ == COMMAND::C_ARITHMETIC;
     }
 
-    bool Parser::IsValidMemoryAccessCommand(const std::string& command) {
-        size_t pos = command.find_first_of(" ");
-        if (pos == std::string::npos) {
-            return false;
-        }
-        std::string command_type = std::string(command, 0, pos);
-        return command_type == "push" || command_type == "pop";
+    bool Parser::IsValidMemoryAccessCommand() {
+        return command_type_ == COMMAND::C_PUSH || command_type_ == COMMAND::C_POP;
     }
 
-    bool Parser::IsValidControlFlowCommand(const std::string& command) {
-        size_t pos = command.find_first_of(" ");
-        if (pos == std::string::npos) {
-            return false;
-        }
-        std::string command_type = std::string(command, 0, pos);
-        pos = command.find_last_of(" ");
-        std::string symbol = std::string(command, pos + 1);
-        return (command_type == "label" || command_type == "goto" || command_type == "if-goto") && IsValidSymbol(symbol);
+    bool Parser::IsValidControlFlowCommand() {
+        return (command_type_ == COMMAND::C_LABEL || command_type_ == COMMAND::C_GOTO || command_type_ == COMMAND::C_IF) && IsValidSymbol(arg1_);
     }
 
-    bool Parser::IsValidFunctionCallCommand(const std::string& command) {
-        if (command == "return") {
+    bool Parser::IsValidFunctionCallCommand() {
+        if (command_type_ == COMMAND::C_RETURN) {
             return true;
         }
-        size_t pos = command.find_first_of(" ");
-        if (pos == std::string::npos) {
-            return false;
-        }
-        std::string command_type = std::string(command, 0, pos);
-        size_t second_pos = command.find_last_of(" ");
-        std::string symbol = std::string(command, pos + 1, second_pos - pos - 1);
-        return (command_type == "function" || command_type == "call") && IsValidSymbol(symbol);
+        return (command_type_ == COMMAND::C_FUNCTION || command_type_ == COMMAND::C_CALL) && IsValidSymbol(arg1_);
     }
 
     bool Parser::IsValidSymbol(const std::string symbol) {
