@@ -1,10 +1,11 @@
 #pragma once
 #include <iostream>
+#include <fstream>
 
 namespace jack_compiler {
     class CompilationEngine {
     public:
-        explicit CompilationEngine(std::istream& input, std::ostream& output);
+        explicit CompilationEngine(std::istream* input, std::ostream* output);
         CompilationEngine(const std::string& input_file, const std::string& output_file);
         ~CompilationEngine();
 
@@ -35,5 +36,7 @@ namespace jack_compiler {
         void CompileTerm();
         void CompileExpressionList();
     private:
+        std::istream* input_;
+        std::ostream* output_;
     };
 } // namespace jack_compiler

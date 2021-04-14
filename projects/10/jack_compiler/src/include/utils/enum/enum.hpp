@@ -45,6 +45,6 @@ namespace jack_compiler {
         FALSE,
         NULL_,
         THIS,
-    }
+    };
 
 } // namespace jack_compiler

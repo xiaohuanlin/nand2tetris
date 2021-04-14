@@ -1,5 +1,3 @@
-#pragma once
-
 #include <dirent.h>
 #include <iostream>
 #include <sys/stat.h>

@@ -14,5 +14,6 @@ namespace jack_compiler {
         }
         JackAnalyzer analyzer(argv[1]);
         analyzer.Analyze();
+        return 0;
     }
 } // namespace jack_compiler

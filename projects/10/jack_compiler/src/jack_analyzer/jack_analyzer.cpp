@@ -36,8 +36,8 @@ namespace jack_compiler {
                 continue;
             }
 
-            JackTokenizer tokenizer(&input);
-            CompilationEngine engine(input, *reinterpret_cast<std::ostream*>(&output));
+            JackTokenizer tokenizer(reinterpret_cast<std::istream*>(&input));
+            CompilationEngine engine(reinterpret_cast<std::istream*>(&input), reinterpret_cast<std::ostream*>(&output));
 
             while (tokenizer.HasMoreTokens()) {
                 tokenizer.Advance();
