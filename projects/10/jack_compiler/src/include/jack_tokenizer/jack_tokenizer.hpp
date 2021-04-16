@@ -6,7 +6,7 @@
 namespace jack_compiler {
     class JackTokenizer {
     public:
-        JackTokenizer(std::istream* input);
+        explicit JackTokenizer(std::istream* input);
         // JackTokenizer(const std::string file);
 
         /**
@@ -20,32 +20,29 @@ namespace jack_compiler {
         void Advance();
 
         inline TOKEN_TYPE GetTokenType() const noexcept {return token_type_;};
-        inline KEYWORD_TYPE GetKeyword() const noexcept {return parse_value_.key_word_;};
-        inline std::string GetSymbol() const noexcept {return parse_value_.symbol_;};
-        inline std::string GetIdentifier() const noexcept {return parse_value_.iden_;};
-        inline int GetIntVal() const noexcept {return parse_value_.intval_;};
-        inline std::string GetStringVal() const noexcept {return parse_value_.strval_;};
+        inline KEYWORD_TYPE GetKeyword() const noexcept {return key_word_;};
+        inline std::string GetSymbol() const noexcept {return symbol_;};
+        inline std::string GetIdentifier() const noexcept {return identifier_;};
+        inline int GetIntVal() const noexcept {return intval_;};
+        inline std::string GetStringVal() const noexcept {return strval_;};
     private:
         /**
          * Judge the token is right or should be passed
          */
-        bool IsValidToken(std::string token);
+        bool IsValidToken(char c);
+        bool IsValidComment(char c);
+        bool IsValidSymbol(char c);
+        bool IsValidInteger(char c);
+        bool IsValidString(char c);
+        bool IsValidIdentifier(char c);
+        bool IsValidKeyWord(const std::string& keyword);
         std::istream* input_;
         TOKEN_TYPE token_type_;
-        union ParseValue {
-            KEYWORD_TYPE key_word_;
-            std::string symbol_;
-            std::string iden_;
-            std::string strval_;
-            int intval_;
-            ParseValue() {
-                key_word_ = KEYWORD_TYPE::NULL_;
-                symbol_ = "";
-                iden_ = "";
-                strval_ = "";
-            };
-            ~ParseValue() {}
-        } parse_value_;
+        KEYWORD_TYPE key_word_;
+        std::string symbol_;
+        std::string identifier_;
+        std::string strval_;
+        int intval_;
     };
     
 } // namespace jack_compiler
