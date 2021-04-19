@@ -1,6 +1,9 @@
 #pragma once
+
 #include <iostream>
 #include <fstream>
+
+#include "jack_tokenizer/jack_tokenizer.hpp"
 
 namespace jack_compiler {
     class CompilationEngine {
@@ -16,7 +19,7 @@ namespace jack_compiler {
         /**
          * Compile static or field declaration
          */
-        void CompileClassVarDec();
+        void CompileClassVarDec(std::shared_ptr<Node> parent);
         void CompileSubroutine();
         void CompileParameterList();
         void CompileVarDec();
@@ -36,7 +39,9 @@ namespace jack_compiler {
         void CompileTerm();
         void CompileExpressionList();
     private:
-        std::istream* input_;
-        std::ostream* output_;
+        void MoveToNext();
+        JackTokenizer tokenizer_;
+        Writer* writer_;
+        std::shared_ptr<Node> root_;
     };
 } // namespace jack_compiler

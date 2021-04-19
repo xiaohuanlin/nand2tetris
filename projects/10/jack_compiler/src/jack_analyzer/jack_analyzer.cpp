@@ -25,44 +25,12 @@ namespace jack_compiler {
             std::string base_name(file, 0, pos);
             const std::string output_file_name = base_name + ".xml";
             std::ofstream output(output_file_name);
-            if (!output.is_open()) {
-                std::cerr << "Can't open the output file: " << output_file_name << std::endl;
-                continue;
-            }
 
-            std::ifstream input(file);
-            if (!input.is_open()) {
-                std::cerr << "Can't open the input file: " << file << std::endl;
-                continue;
-            }
-
-            JackTokenizer tokenizer(reinterpret_cast<std::istream*>(&input));
-            CompilationEngine engine(reinterpret_cast<std::istream*>(&input), reinterpret_cast<std::ostream*>(&output));
-
-            while (tokenizer.HasMoreTokens()) {
-                tokenizer.Advance();
-                
-                switch (tokenizer.GetTokenType()) {
-                    case TOKEN_TYPE::KEYWORD: {
-                        break;
-                    }
-                    case TOKEN_TYPE::SYMBOL: {
-                        break;
-                    }
-                    case TOKEN_TYPE::IDENTIFIER: {
-                        break;
-                    }
-                    case TOKEN_TYPE::INT_CONST: {
-                        break;
-                    }
-                    case TOKEN_TYPE::STRING_CONST: {
-                        break;
-                    }
-                    default:
-                        std::cerr << "Unknown token" << std::endl;
-                        break;
-                }
-            }
+            CompilationEngine engine(
+                file,
+                output_file_name
+            );
+            engine.CompileClass();
         }
     }
 } // namespace jack_compiler

@@ -1,13 +1,17 @@
 #pragma once
 
 #include <iostream>
+#include <fstream>
+
 #include "utils/enum/enum.hpp"
+#include "writer/xml/xml_writer.hpp"
 
 namespace jack_compiler {
     class JackTokenizer {
     public:
         explicit JackTokenizer(std::istream* input);
-        // JackTokenizer(const std::string file);
+        explicit JackTokenizer(const std::string& file);
+        ~JackTokenizer();
 
         /**
          * If there are more tokens?
@@ -18,8 +22,13 @@ namespace jack_compiler {
          * Only if there are more tokens, we can use this function to next token
          */
         void Advance();
+        
+        /**
+         * Show data
+         */
+        void CreateOutput(Writer& writer);
 
-        inline TOKEN_TYPE GetTokenType() const noexcept {return token_type_;};
+        inline TERMINAL_TOKEN_TYPE GetTokenType() const noexcept {return token_type_;};
         inline KEYWORD_TYPE GetKeyword() const noexcept {return key_word_;};
         inline std::string GetSymbol() const noexcept {return symbol_;};
         inline std::string GetIdentifier() const noexcept {return identifier_;};
@@ -37,7 +46,8 @@ namespace jack_compiler {
         bool IsValidIdentifier(char c);
         bool IsValidKeyWord(const std::string& keyword);
         std::istream* input_;
-        TOKEN_TYPE token_type_;
+        bool can_delete_input_ = false;
+        TERMINAL_TOKEN_TYPE token_type_;
         KEYWORD_TYPE key_word_;
         std::string symbol_;
         std::string identifier_;
