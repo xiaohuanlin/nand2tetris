@@ -266,45 +266,45 @@ namespace jack_compiler
         unlink(test_file_name.c_str());
     }
 
-    // TEST(TokenizerTest, ArrayMainXMLTokenOutput) {
-    //     char dir_name[] = "ArrayTest";
-    //     char file_name[] = "Main";
-    //     RunTestByCase(dir_name, file_name);
-    // }
+    TEST(TokenizerTest, ArrayMainXMLTokenOutput) {
+        char dir_name[] = "ArrayTest";
+        char file_name[] = "Main";
+        RunTestByCase(dir_name, file_name);
+    }
 
-    // TEST(TokenizerTest, ExpressionLessSquareMainXMLTokenOutput) {
-    //     char dir_name[] = "ExpressionLessSquare";
-    //     char file_name[] = "Main";
-    //     RunTestByCase(dir_name, file_name);
-    // }
+    TEST(TokenizerTest, ExpressionLessSquareMainXMLTokenOutput) {
+        char dir_name[] = "ExpressionLessSquare";
+        char file_name[] = "Main";
+        RunTestByCase(dir_name, file_name);
+    }
 
-    // TEST(TokenizerTest, ExpressionLessSquareSquareXMLTokenOutput) {
-    //     char dir_name[] = "ExpressionLessSquare";
-    //     char file_name[] = "Square";
-    //     RunTestByCase(dir_name, file_name);
-    // }
+    TEST(TokenizerTest, ExpressionLessSquareSquareXMLTokenOutput) {
+        char dir_name[] = "ExpressionLessSquare";
+        char file_name[] = "Square";
+        RunTestByCase(dir_name, file_name);
+    }
 
-    // TEST(TokenizerTest, ExpressionLessSquareSquareGameXMLTokenOutput) {
-    //     char dir_name[] = "ExpressionLessSquare";
-    //     char file_name[] = "SquareGame";
-    //     RunTestByCase(dir_name, file_name);
-    // }
+    TEST(TokenizerTest, ExpressionLessSquareSquareGameXMLTokenOutput) {
+        char dir_name[] = "ExpressionLessSquare";
+        char file_name[] = "SquareGame";
+        RunTestByCase(dir_name, file_name);
+    }
 
-    // TEST(TokenizerTest, SquareMainXMLTokenOutput) {
-    //     char dir_name[] = "Square";
-    //     char file_name[] = "Main";
-    //     RunTestByCase(dir_name, file_name);
-    // }
+    TEST(TokenizerTest, SquareMainXMLTokenOutput) {
+        char dir_name[] = "Square";
+        char file_name[] = "Main";
+        RunTestByCase(dir_name, file_name);
+    }
 
-    // TEST(TokenizerTest, SquareSquareXMLTokenOutput) {
-    //     char dir_name[] = "Square";
-    //     char file_name[] = "Square";
-    //     RunTestByCase(dir_name, file_name);
-    // }
+    TEST(TokenizerTest, SquareSquareXMLTokenOutput) {
+        char dir_name[] = "Square";
+        char file_name[] = "Square";
+        RunTestByCase(dir_name, file_name);
+    }
 
-    // TEST(TokenizerTest, SquareSquareGameXMLTokenOutput) {
-    //     char dir_name[] = "Square";
-    //     char file_name[] = "SquareGame";
-    //     RunTestByCase(dir_name, file_name);
-    // }
+    TEST(TokenizerTest, SquareSquareGameXMLTokenOutput) {
+        char dir_name[] = "Square";
+        char file_name[] = "SquareGame";
+        RunTestByCase(dir_name, file_name);
+    }
 } // namespace jack_compiler

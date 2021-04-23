@@ -1,19 +1,19 @@
 #include "writer/xml/xml_writer.hpp"
 
 namespace jack_compiler {
-    std::string XMLWriter::Write(std::shared_ptr<Node> root) {
-        std::string start_label(WriteStartLabel(root));
-        std::string end_label(WriteEndLabel(root));
+    std::string XMLWriter::Write(std::shared_ptr<Node> root, int level) {
+        std::string end_label(WriteEndLabel(root, level));
 
         if (root->IsTerminalToken()) {
-            return start_label + root->GetContent() + end_label;
+            return WriteStartLabel(root, level) + " " + root->GetContent() + " " + WriteEndLabel(root);
         }
         std::string res;
-        res += start_label;
+        res += WriteStartLabel(root, level);
+        res.push_back('\n');
         for (auto& child : root->GetChildren()) {
-            res += Write(std::move(child));
+            res += Write(std::move(child), level+1);
         }
-        res += end_label;
+        res += WriteEndLabel(root, level);
         return res;
     }
 } // namespace jack_compiler

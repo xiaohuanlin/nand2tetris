@@ -20,7 +20,7 @@ namespace jack_compiler {
          */
         virtual void WriteToOutput(std::shared_ptr<Node> root);
     protected:
-        virtual std::string Write(std::shared_ptr<Node> root)=0;
+        virtual std::string Write(std::shared_ptr<Node> root, int level = 0)=0;
         bool can_delete_output_;
         std::ostream* output_;
     };

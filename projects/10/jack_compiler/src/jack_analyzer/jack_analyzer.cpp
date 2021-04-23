@@ -23,7 +23,7 @@ namespace jack_compiler {
         for (const auto& file : files_) {
             size_t pos = file.find_last_of('.');
             std::string base_name(file, 0, pos);
-            const std::string output_file_name = base_name + ".xml";
+            const std::string output_file_name = base_name + "_analyze.xml";
             std::ofstream output(output_file_name);
 
             CompilationEngine engine(
