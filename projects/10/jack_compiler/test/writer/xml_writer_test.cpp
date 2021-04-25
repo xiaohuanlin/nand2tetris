@@ -20,9 +20,10 @@ namespace jack_compiler
         auto buffer = os.rdbuf();
         std::streamsize size = buffer->pubseekoff(0, os.end);
         buffer->pubseekoff(0, os.beg);
-        char content[size];
+        char content[size + 1];
+        content[size] = '\0';
         buffer->sgetn(content, size);
-        ASSERT_EQ("<identifier>test</identifier>", std::string(content));
+        ASSERT_EQ("<identifier> test </identifier>\n", std::string(content));
     }
 
     TEST(XMLWriterTest, LevelTwo) {
@@ -43,9 +44,13 @@ namespace jack_compiler
         auto buffer = os.rdbuf();
         std::streamsize size = buffer->pubseekoff(0, os.end);
         buffer->pubseekoff(0, os.beg);
-        char content[size];
+        char content[size + 1];
+        content[size] = '\0';
         buffer->sgetn(content, size);
-        ASSERT_EQ("<class><symbol>{</symbol><symbol>}</symbol></class>", std::string(content));
+        ASSERT_EQ("<class>\n"
+                        "\t<symbol> { </symbol>\n"
+                        "\t<symbol> } </symbol>\n"
+                    "</class>\n", std::string(content));
     }
 
     TEST(XMLWriterTest, LevelThree) {
@@ -78,10 +83,17 @@ namespace jack_compiler
         auto buffer = os.rdbuf();
         std::streamsize size = buffer->pubseekoff(0, os.end);
         buffer->pubseekoff(0, os.beg);
-        char content[size];
+        char content[size + 1];
+        content[size] = '\0';
         buffer->sgetn(content, size);
         ASSERT_EQ(
-            "<class><statements><keyword>return</keyword><identifier>x</identifier></statements><symbol>;</symbol></class>",
+            "<class>\n"
+                "\t<statements>\n"
+                    "\t\t<keyword> return </keyword>\n"
+                    "\t\t<identifier> x </identifier>\n"
+                "\t</statements>\n"
+                "\t<symbol> ; </symbol>\n"
+            "</class>\n",
             std::string(content)
         );
     }

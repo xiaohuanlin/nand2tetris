@@ -11,7 +11,7 @@ namespace jack_compiler {
         /**
          * Analyse the file or directory
          */
-        void Analyze();
+        void Analyze(bool to_token);
     private:
         /**
          * Read all .jack files from directory or individual file

@@ -187,7 +187,7 @@ namespace jack_compiler
         auto current = std::make_shared<Node>(false, token_union);
         parent->AppendChild(current);
 
-        if (!CompileType(current)) {
+        if (!CompileType(nullptr)) {
             return;
         }
 
@@ -615,16 +615,18 @@ namespace jack_compiler
         Node::TokenUnion token_union;
         token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::EXPRESSION_LIST;
         auto current = std::make_shared<Node>(false, token_union);
-        parent->AppendChild(current);
+        auto tmp = std::make_shared<Node>(false, token_union);
 
         try {
             CompileExpression(current);
-        } catch (CompileException) {
+            parent->AppendChild(current);
+        } catch (...) {
+            parent->AppendChild(tmp);
             return;
         }
 
         while (CompileSymbol(nullptr, {","})) {
-            if (CompileSymbol(current, {","})) {
+            if (!CompileSymbol(current, {","})) {
                 THROW_COMPILER_EXCEPT
             }
 

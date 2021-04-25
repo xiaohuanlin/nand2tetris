@@ -195,7 +195,14 @@ namespace jack_compiler
         input.read(buffer, length);
         buffer[length] = '\0';
         ASSERT_EQ(
-            "<tokens><keyword>function</keyword><symbol>{</symbol><keyword>return</keyword><keyword>null</keyword><symbol>;</symbol><symbol>}</symbol></tokens>",
+            "<tokens>\n"
+                "\t<keyword> function </keyword>\n"
+                "\t<symbol> { </symbol>\n"
+                "\t<keyword> return </keyword>\n"
+                "\t<keyword> null </keyword>\n"
+                "\t<symbol> ; </symbol>\n"
+                "\t<symbol> } </symbol>\n"
+            "</tokens>\n",
             std::string(buffer)
         );
         unlink(output_file.c_str());
@@ -226,11 +233,11 @@ namespace jack_compiler
         actual_result.read(actual_result_buffer, length);
         actual_result_buffer[length] = '\0';
 
-        // replace all \n\r ' '
+        // replace all \n\r ' ' \t
         std::string actual_result_str = std::string(actual_result_buffer);
         int count = 0;
         std::remove_if(actual_result_str.begin(), actual_result_str.end(), [&] (char& v) {
-            if (v == '\n' || v == '\r' || v == ' ') {
+            if (v == '\n' || v == '\r' || v == ' ' || '\t') {
                 ++count;
                 return true;
             }
@@ -248,11 +255,11 @@ namespace jack_compiler
         test_result.read(buffer, length);
         buffer[length] = '\0';
 
-        // replace all \n\r ' '
+        // replace all \n\r ' ' \t
         std::string test_result_str = std::string(buffer);
         count = 0;
         std::remove_if(test_result_str.begin(), test_result_str.end(), [&] (char& v) {
-            if (v == '\n' || v == '\r' || v == ' ') {
+            if (v == '\n' || v == '\r' || v == ' ' || '\t') {
                 ++count;
                 return true;
             }

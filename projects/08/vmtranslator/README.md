@@ -5,6 +5,7 @@
 ```shell
 $ mkdir build
 $ cd build
+$ cmake ..
 $ make 
 $ ./main [input_file_or_dir] [output_file]
 ```
@@ -15,6 +16,7 @@ $ ./main [input_file_or_dir] [output_file]
 ```shell
 $ mkdir build
 $ cd build
+$ cmake ..
 $ make main_test 
 $ ./test/main_test
 ```

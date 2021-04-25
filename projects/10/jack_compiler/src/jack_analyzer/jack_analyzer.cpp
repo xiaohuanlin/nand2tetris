@@ -19,18 +19,27 @@ namespace jack_compiler {
         }
     }
 
-    void JackAnalyzer::Analyze() {
+    void JackAnalyzer::Analyze(bool to_token) {
         for (const auto& file : files_) {
             size_t pos = file.find_last_of('.');
             std::string base_name(file, 0, pos);
-            const std::string output_file_name = base_name + "_analyze.xml";
-            std::ofstream output(output_file_name);
+            if (to_token) {
+                const std::string output_file_name = base_name + "_token_analyze.xml";
+                std::ofstream output(output_file_name);
 
-            CompilationEngine engine(
-                file,
-                output_file_name
-            );
-            engine.CompileClass();
+                JackTokenizer token(file);
+                XMLWriter writer(output_file_name);
+                token.CreateOutput(writer);
+            } else {
+                const std::string output_file_name = base_name + "_analyze.xml";
+                std::ofstream output(output_file_name);
+
+                CompilationEngine engine(
+                    file,
+                    output_file_name
+                );
+                engine.CompileClass();
+            }
         }
     }
 } // namespace jack_compiler

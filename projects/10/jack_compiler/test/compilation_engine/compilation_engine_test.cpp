@@ -502,4 +502,69 @@ namespace jack_compiler
                         "\t<symbol> } </symbol>\n"
                     "</class>\n", std::string(content));
     }
+
+    TEST(CompilationEngineTest, SubroutineCall) {
+        std::stringbuf osb("");
+        std::ostream os(&osb);
+
+        std::stringbuf isb("class Test\n{ function void test() {do Mock(x, y, z);}}");
+        std::istream is(&isb);
+
+        CompilationEngine engine(&is, &os);
+        engine.CompileClass();
+
+        auto buffer = os.rdbuf();
+        std::streamsize size = buffer->pubseekoff(0, os.end);
+        buffer->pubseekoff(0, os.beg);
+        char content[size + 1];
+        buffer->sgetn(content, size);
+        content[size] = '\0';
+        ASSERT_EQ("<class>\n"
+                        "\t<keyword> class </keyword>\n"
+                        "\t<identifier> Test </identifier>\n"
+                        "\t<symbol> { </symbol>\n"
+                        "\t<subroutineDec>\n"
+                            "\t\t<keyword> function </keyword>\n"
+                            "\t\t<keyword> void </keyword>\n"
+                            "\t\t<identifier> test </identifier>\n"
+                            "\t\t<symbol> ( </symbol>\n"
+                            "\t\t<parameterList>\n"
+                            "\t\t</parameterList>\n"
+                            "\t\t<symbol> ) </symbol>\n"
+                            "\t\t<subroutineBody>\n"
+                                "\t\t\t<symbol> { </symbol>\n"
+                                "\t\t\t<statements>\n"
+                                    "\t\t\t\t<doStatement>\n"
+                                        "\t\t\t\t\t<keyword> do </keyword>\n"
+                                        "\t\t\t\t\t<identifier> Mock </identifier>\n"
+                                        "\t\t\t\t\t<symbol> ( </symbol>\n"
+                                        "\t\t\t\t\t<expressionList>\n"
+                                            "\t\t\t\t\t\t<expression>\n"
+                                                "\t\t\t\t\t\t\t<term>\n"
+                                                    "\t\t\t\t\t\t\t\t<identifier> x </identifier>\n"
+                                                "\t\t\t\t\t\t\t</term>\n"
+                                            "\t\t\t\t\t\t</expression>\n"
+                                            "\t\t\t\t\t\t<symbol> , </symbol>\n"
+                                            "\t\t\t\t\t\t<expression>\n"
+                                                "\t\t\t\t\t\t\t<term>\n"
+                                                    "\t\t\t\t\t\t\t\t<identifier> y </identifier>\n"
+                                                "\t\t\t\t\t\t\t</term>\n"
+                                            "\t\t\t\t\t\t</expression>\n"
+                                            "\t\t\t\t\t\t<symbol> , </symbol>\n"
+                                            "\t\t\t\t\t\t<expression>\n"
+                                                "\t\t\t\t\t\t\t<term>\n"
+                                                    "\t\t\t\t\t\t\t\t<identifier> z </identifier>\n"
+                                                "\t\t\t\t\t\t\t</term>\n"
+                                            "\t\t\t\t\t\t</expression>\n"
+                                        "\t\t\t\t\t</expressionList>\n"
+                                        "\t\t\t\t\t<symbol> ) </symbol>\n"
+                                        "\t\t\t\t\t<symbol> ; </symbol>\n"
+                                    "\t\t\t\t</doStatement>\n"
+                                "\t\t\t</statements>\n"
+                                "\t\t\t<symbol> } </symbol>\n"
+                            "\t\t</subroutineBody>\n"
+                        "\t</subroutineDec>\n"
+                        "\t<symbol> } </symbol>\n"
+                    "</class>\n", std::string(content));
+    }
 }
