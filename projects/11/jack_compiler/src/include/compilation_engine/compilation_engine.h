@@ -9,8 +9,12 @@
 #include <vector>
 
 #include "jack_tokenizer/jack_tokenizer.h"
+#include "writer/node.h"
+#include "writer/writer.h"
 
 namespace jack_compiler {
+
+template<class WriterType>
 class CompilationEngine {
  public:
   explicit CompilationEngine(std::istream *input, std::ostream *output);
@@ -104,7 +108,7 @@ class CompilationEngine {
   bool CompileIntegerConst(std::shared_ptr<Node> parent);
   bool CompileStringConst(std::shared_ptr<Node> parent);
   JackTokenizer tokenizer_;
-  Writer *writer_;
+  WriterType *writer_;
   std::shared_ptr<Node> root_;
 };
 }  // namespace jack_compiler

@@ -6,7 +6,7 @@
 #include <string>
 
 #include "utils/enum/enum.h"
-#include "writer/xml/xml_writer.h"
+#include "writer/writer.h"
 
 namespace jack_compiler {
 class JackTokenizer {

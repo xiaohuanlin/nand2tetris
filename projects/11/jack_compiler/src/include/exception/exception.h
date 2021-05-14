@@ -16,7 +16,7 @@ namespace jack_compiler {
 class CompileException : public std::logic_error {
  public:
   explicit CompileException(const std::string &info)
-      : std::logic_error(info), info_("Compiler error: " + info_) {}
+      : std::logic_error(info), info_("Compiler error: " + info) {}
 
   const char *what() const noexcept { return info_.c_str(); };
 

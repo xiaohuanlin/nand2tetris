@@ -155,6 +155,91 @@ static const std::unordered_map<KEYWORD_TYPE, std::string> KEYWORD_STR_TABLE{
     {KEYWORD_TYPE::THIS, "this"},
 };
 
+enum class SymbolTableKind {
+    kStatic,
+    kField,
+    kArg,
+    kVar,
+};
+
+enum class SegmentType {
+    kConst,
+    kArg,
+    kLocal,
+    kStatic,
+    kThis,
+    kThat,
+    kPointer,
+    kTemp,
+};
+
+const static std::unordered_map<SymbolTableKind, SegmentType> SymbolTableKindToSegmentType {
+    {SymbolTableKind::kStatic, SegmentType::kStatic},
+    {SymbolTableKind::kField, SegmentType::kThis},
+    {SymbolTableKind::kArg, SegmentType::kArg},
+    {SymbolTableKind::kVar, SegmentType::kLocal},
+};
+
+const static std::unordered_map<SegmentType, std::string> SegmentTypeString {
+    {SegmentType::kConst,   "constant"},
+    {SegmentType::kArg,     "argument"},
+    {SegmentType::kLocal,   "local"},
+    {SegmentType::kStatic,  "static"},
+    {SegmentType::kThis,    "this"},
+    {SegmentType::kThat,    "that"},
+    {SegmentType::kPointer, "pointer"},
+    {SegmentType::kTemp,    "temp"},
+};
+
+
+enum class ArithmeticType {
+    kAdd,
+    kSub,
+    kNeg,
+    kEq,
+    kGt,
+    kLt,
+    kAnd,
+    kOr,
+    kNot
+};
+
+const static std::unordered_map<ArithmeticType, std::string> ArithmeticTypeString {
+    {ArithmeticType::kAdd,  "add"},
+    {ArithmeticType::kSub,  "sub"},
+    {ArithmeticType::kNeg,  "neg"},
+    {ArithmeticType::kEq,   "eq"},
+    {ArithmeticType::kGt,   "gt"},
+    {ArithmeticType::kLt,   "lt"},
+    {ArithmeticType::kAnd,  "and"},
+    {ArithmeticType::kOr,   "or"},
+    {ArithmeticType::kNot,  "not"},
+};
+
+enum class OpType {
+    kAdd,
+    kSub,
+    kMultiply,
+    kDivide,
+    kEq,
+    kGt,
+    kLt,
+    kAnd,
+    kOr,
+};
+
+const static std::unordered_map<std::string, OpType> StringOpType {
+    {"+", OpType::kAdd},
+    {"-", OpType::kSub},
+    {"*", OpType::kMultiply},
+    {"/", OpType::kDivide},
+    {"=", OpType::kEq},
+    {"<", OpType::kGt},
+    {">", OpType::kLt},
+    {"&", OpType::kAnd},
+    {"|", OpType::kOr},
+};
+
 }  // namespace jack_compiler
 
 #endif  // JACK_COMPILER_ENUM_H_

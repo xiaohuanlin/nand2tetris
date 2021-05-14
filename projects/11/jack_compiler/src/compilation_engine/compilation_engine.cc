@@ -5,29 +5,35 @@
 #include "exception/exception.h"
 #include "utils/enum/enum.h"
 #include "writer/xml/xml_writer.h"
+#include "writer/vm/vm_writer.h"
 
 namespace jack_compiler {
-CompilationEngine::CompilationEngine(std::istream* input, std::ostream* output): tokenizer_(input) {
-    writer_ = new XMLWriter(output);
+template<class WriterType>
+CompilationEngine<WriterType>::CompilationEngine(std::istream* input, std::ostream* output): tokenizer_(input) {
+    writer_ = new WriterType(output);
 }
 
-CompilationEngine::CompilationEngine(const std::string& input_file, const std::string& output_file):
+template<class WriterType>
+CompilationEngine<WriterType>::CompilationEngine(const std::string& input_file, const std::string& output_file):
                                     tokenizer_(input_file) {
-    writer_ = new XMLWriter(output_file);
+    writer_ = new WriterType(output_file);
 }
 
-CompilationEngine::~CompilationEngine() {
+template<class WriterType>
+CompilationEngine<WriterType>::~CompilationEngine() {
     delete writer_;
 }
 
-void CompilationEngine::MoveToNext() {
+template<class WriterType>
+void CompilationEngine<WriterType>::MoveToNext() {
     if (!tokenizer_.HasMoreTokens()) {
         THROW_COMPILER_EXCEPT
     }
     tokenizer_.Advance();
 }
 
-void CompilationEngine::CompileClass() {
+template<class WriterType>
+void CompilationEngine<WriterType>::CompileClass() {
     Node::TokenUnion token_union;
     token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::CLASS;
     root_ = std::make_shared<Node>(false, token_union);
@@ -70,7 +76,8 @@ void CompilationEngine::CompileClass() {
     writer_->WriteToOutput(root_);
 }
 
-void CompilationEngine::CompileClassVarDec(std::shared_ptr<Node> parent) {
+template<class WriterType>
+void CompilationEngine<WriterType>::CompileClassVarDec(std::shared_ptr<Node> parent) {
     Node::TokenUnion token_union;
     token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::CLASS_VAR_DEC;
     auto current = std::make_shared<Node>(false, token_union);
@@ -110,7 +117,8 @@ void CompilationEngine::CompileClassVarDec(std::shared_ptr<Node> parent) {
     }
 }
 
-void CompilationEngine::CompileSubroutine(std::shared_ptr<Node> parent) {
+template<class WriterType>
+void CompilationEngine<WriterType>::CompileSubroutine(std::shared_ptr<Node> parent) {
     Node::TokenUnion token_union;
     token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::SUBROUTINE_DEC;
     auto current = std::make_shared<Node>(false, token_union);
@@ -151,7 +159,8 @@ void CompilationEngine::CompileSubroutine(std::shared_ptr<Node> parent) {
     CompileSubroutineBody(current);
 }
 
-void CompilationEngine::CompileSubroutineBody(std::shared_ptr<Node> parent) {
+template<class WriterType>
+void CompilationEngine<WriterType>::CompileSubroutineBody(std::shared_ptr<Node> parent) {
     Node::TokenUnion token_union;
     token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::SUBROUTINE_BODY;
     auto current = std::make_shared<Node>(false, token_union);
@@ -176,7 +185,8 @@ void CompilationEngine::CompileSubroutineBody(std::shared_ptr<Node> parent) {
     }
 }
 
-void CompilationEngine::CompileParameterList(std::shared_ptr<Node> parent) {
+template<class WriterType>
+void CompilationEngine<WriterType>::CompileParameterList(std::shared_ptr<Node> parent) {
     Node::TokenUnion token_union;
     token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::PARAMETER_LIST;
     auto current = std::make_shared<Node>(false, token_union);
@@ -215,7 +225,8 @@ void CompilationEngine::CompileParameterList(std::shared_ptr<Node> parent) {
     }
 }
 
-void CompilationEngine::CompileVarDec(std::shared_ptr<Node> parent) {
+template<class WriterType>
+void CompilationEngine<WriterType>::CompileVarDec(std::shared_ptr<Node> parent) {
     Node::TokenUnion token_union;
     token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::VARDEC;
     auto current = std::make_shared<Node>(false, token_union);
@@ -256,7 +267,8 @@ void CompilationEngine::CompileVarDec(std::shared_ptr<Node> parent) {
     }
 }
 
-void CompilationEngine::CompileStatements(std::shared_ptr<Node> parent) {
+template<class WriterType>
+void CompilationEngine<WriterType>::CompileStatements(std::shared_ptr<Node> parent) {
     Node::TokenUnion token_union;
     token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::STATEMENTS;
     auto current = std::make_shared<Node>(false, token_union);
@@ -292,7 +304,8 @@ void CompilationEngine::CompileStatements(std::shared_ptr<Node> parent) {
     }
 }
 
-void CompilationEngine::CompileDo(std::shared_ptr<Node> parent) {
+template<class WriterType>
+void CompilationEngine<WriterType>::CompileDo(std::shared_ptr<Node> parent) {
     // todo unfinished
     Node::TokenUnion token_union;
     token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::DO_STATEMENT;
@@ -315,7 +328,8 @@ void CompilationEngine::CompileDo(std::shared_ptr<Node> parent) {
     MoveToNext();
 }
 
-void CompilationEngine::CompileLet(std::shared_ptr<Node> parent) {
+template<class WriterType>
+void CompilationEngine<WriterType>::CompileLet(std::shared_ptr<Node> parent) {
     Node::TokenUnion token_union;
     token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::LET_STATEMENT;
     auto current = std::make_shared<Node>(false, token_union);
@@ -364,7 +378,8 @@ void CompilationEngine::CompileLet(std::shared_ptr<Node> parent) {
     MoveToNext();
 }
 
-void CompilationEngine::CompileWhile(std::shared_ptr<Node> parent) {
+template<class WriterType>
+void CompilationEngine<WriterType>::CompileWhile(std::shared_ptr<Node> parent) {
     Node::TokenUnion token_union;
     token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::WHILE_STATEMENT;
     auto current = std::make_shared<Node>(false, token_union);
@@ -407,7 +422,8 @@ void CompilationEngine::CompileWhile(std::shared_ptr<Node> parent) {
     MoveToNext();
 }
 
-void CompilationEngine::CompileReturn(std::shared_ptr<Node> parent) {
+template<class WriterType>
+void CompilationEngine<WriterType>::CompileReturn(std::shared_ptr<Node> parent) {
     Node::TokenUnion token_union;
     token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::RETURN_STATEMENT;
     auto current = std::make_shared<Node>(false, token_union);
@@ -433,7 +449,8 @@ void CompilationEngine::CompileReturn(std::shared_ptr<Node> parent) {
     MoveToNext();
 }
 
-void CompilationEngine::CompileIf(std::shared_ptr<Node> parent) {
+template<class WriterType>
+void CompilationEngine<WriterType>::CompileIf(std::shared_ptr<Node> parent) {
     Node::TokenUnion token_union;
     token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::IF_STATEMENT;
     auto current = std::make_shared<Node>(false, token_union);
@@ -498,7 +515,8 @@ void CompilationEngine::CompileIf(std::shared_ptr<Node> parent) {
     }
 }
 
-void CompilationEngine::CompileExpression(std::shared_ptr<Node> parent) {
+template<class WriterType>
+void CompilationEngine<WriterType>::CompileExpression(std::shared_ptr<Node> parent) {
     Node::TokenUnion token_union;
     token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::EXPRESSION;
     auto current = std::make_shared<Node>(false, token_union);
@@ -518,7 +536,8 @@ void CompilationEngine::CompileExpression(std::shared_ptr<Node> parent) {
     }
 }
 
-void CompilationEngine::CompileTerm(std::shared_ptr<Node> parent) {
+template<class WriterType>
+void CompilationEngine<WriterType>::CompileTerm(std::shared_ptr<Node> parent) {
     Node::TokenUnion token_union;
     token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::TERM;
     auto current = std::make_shared<Node>(false, token_union);
@@ -602,7 +621,8 @@ void CompilationEngine::CompileTerm(std::shared_ptr<Node> parent) {
     }
 }
 
-void CompilationEngine::CompileExpressionList(std::shared_ptr<Node> parent) {
+template<class WriterType>
+void CompilationEngine<WriterType>::CompileExpressionList(std::shared_ptr<Node> parent) {
     Node::TokenUnion token_union;
     token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::EXPRESSION_LIST;
     auto current = std::make_shared<Node>(false, token_union);
@@ -626,15 +646,18 @@ void CompilationEngine::CompileExpressionList(std::shared_ptr<Node> parent) {
     }
 }
 
-bool CompilationEngine::CompileOp(std::shared_ptr<Node> parent) {
+template<class WriterType>
+bool CompilationEngine<WriterType>::CompileOp(std::shared_ptr<Node> parent) {
     return CompileSymbol(parent, {"+", "-", "*", "/", "&", "|", "<", ">", "="});
 }
 
-bool CompilationEngine::CompileUnaryOp(std::shared_ptr<Node> parent) {
+template<class WriterType>
+bool CompilationEngine<WriterType>::CompileUnaryOp(std::shared_ptr<Node> parent) {
     return CompileSymbol(parent, {"-", "~"});
 }
 
-bool CompilationEngine::CompileType(std::shared_ptr<Node> parent) {
+template<class WriterType>
+bool CompilationEngine<WriterType>::CompileType(std::shared_ptr<Node> parent) {
     if (!CompileKeyword(parent, {KEYWORD_TYPE::INT, KEYWORD_TYPE::CHAR, KEYWORD_TYPE::BOOLEAN}) &&
         !CompileIdentifier(parent)) {
         return false;
@@ -642,7 +665,8 @@ bool CompilationEngine::CompileType(std::shared_ptr<Node> parent) {
     return true;
 }
 
-void CompilationEngine::CompileSubroutineCall(std::shared_ptr<Node> parent) {
+template<class WriterType>
+void CompilationEngine<WriterType>::CompileSubroutineCall(std::shared_ptr<Node> parent) {
     if (!CompileIdentifier(parent)) {
         THROW_COMPILER_EXCEPT
     }
@@ -676,7 +700,8 @@ void CompilationEngine::CompileSubroutineCall(std::shared_ptr<Node> parent) {
     }
 }
 
-bool CompilationEngine::CompileKeyword(std::shared_ptr<Node> parent, std::vector<KEYWORD_TYPE> limit_types) {
+template<class WriterType>
+bool CompilationEngine<WriterType>::CompileKeyword(std::shared_ptr<Node> parent, std::vector<KEYWORD_TYPE> limit_types) {
     if (tokenizer_.GetTokenType() != TERMINAL_TOKEN_TYPE::KEYWORD ||
         std::find(limit_types.begin(), limit_types.end(), tokenizer_.GetKeyword()) == limit_types.end()) {
         return false;
@@ -690,7 +715,8 @@ bool CompilationEngine::CompileKeyword(std::shared_ptr<Node> parent, std::vector
     return true;
 }
 
-bool CompilationEngine::CompileSymbol(std::shared_ptr<Node> parent, std::vector<std::string> limit_symbols) {
+template<class WriterType>
+bool CompilationEngine<WriterType>::CompileSymbol(std::shared_ptr<Node> parent, std::vector<std::string> limit_symbols) {
     if (tokenizer_.GetTokenType() != TERMINAL_TOKEN_TYPE::SYMBOL ||
         std::find(limit_symbols.begin(), limit_symbols.end(), tokenizer_.GetSymbol()) == limit_symbols.end()) {
         return false;
@@ -713,7 +739,8 @@ bool CompilationEngine::CompileSymbol(std::shared_ptr<Node> parent, std::vector<
     return true;
 }
 
-bool CompilationEngine::CompileIdentifier(std::shared_ptr<Node> parent) {
+template<class WriterType>
+bool CompilationEngine<WriterType>::CompileIdentifier(std::shared_ptr<Node> parent) {
     if (tokenizer_.GetTokenType() != TERMINAL_TOKEN_TYPE::IDENTIFIER) {
         return false;
     }
@@ -726,7 +753,8 @@ bool CompilationEngine::CompileIdentifier(std::shared_ptr<Node> parent) {
     return true;
 }
 
-bool CompilationEngine::CompileIntegerConst(std::shared_ptr<Node> parent) {
+template<class WriterType>
+bool CompilationEngine<WriterType>::CompileIntegerConst(std::shared_ptr<Node> parent) {
     if (tokenizer_.GetTokenType() != TERMINAL_TOKEN_TYPE::INT_CONST) {
         return false;
     }
@@ -739,7 +767,8 @@ bool CompilationEngine::CompileIntegerConst(std::shared_ptr<Node> parent) {
     return true;
 }
 
-bool CompilationEngine::CompileStringConst(std::shared_ptr<Node> parent) {
+template<class WriterType>
+bool CompilationEngine<WriterType>::CompileStringConst(std::shared_ptr<Node> parent) {
     if (tokenizer_.GetTokenType() != TERMINAL_TOKEN_TYPE::STRING_CONST) {
         return false;
     }
@@ -751,4 +780,7 @@ bool CompilationEngine::CompileStringConst(std::shared_ptr<Node> parent) {
     parent->AppendChild(node);
     return true;
 }
+
+template class CompilationEngine<XMLWriter>;
+template class CompilationEngine<VMWriter>;
 }  // namespace jack_compiler

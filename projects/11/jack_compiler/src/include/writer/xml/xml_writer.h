@@ -5,6 +5,7 @@
 #include <string>
 
 #include "writer/writer.h"
+#include "writer/node.h"
 
 namespace jack_compiler {
 class XMLWriter : public Writer {

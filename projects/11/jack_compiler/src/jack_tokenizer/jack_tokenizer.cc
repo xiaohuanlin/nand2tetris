@@ -2,6 +2,8 @@
 
 #include "jack_tokenizer/jack_tokenizer.h"
 #include "utils/enum/enum.h"
+#include "writer/node.h"
+#include "writer/writer.h"
 
 namespace jack_compiler {
 JackTokenizer::JackTokenizer(std::istream* input): input_(input) {

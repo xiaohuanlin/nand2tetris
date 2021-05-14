@@ -4,6 +4,7 @@
 
 #include "compilation_engine/compilation_engine.h"
 #include "exception/exception.h"
+#include "writer/xml/xml_writer.h"
 
 namespace jack_compiler {
     TEST(CompilationEngineTest, ClassTest) {
@@ -13,7 +14,7 @@ namespace jack_compiler {
         std::stringbuf isb("class Test\n{}");
         std::istream is(&isb);
 
-        CompilationEngine engine(&is, &os);
+        CompilationEngine<XMLWriter> engine(&is, &os);
         engine.CompileClass();
 
         auto buffer = os.rdbuf();
@@ -37,7 +38,7 @@ namespace jack_compiler {
         std::stringbuf isb("class Test\n{ static int a,b;}");
         std::istream is(&isb);
 
-        CompilationEngine engine(&is, &os);
+        CompilationEngine<XMLWriter> engine(&is, &os);
         engine.CompileClass();
 
         auto buffer = os.rdbuf();
@@ -69,7 +70,7 @@ namespace jack_compiler {
         std::stringbuf isb("class Test\n{ function void test() {}}");
         std::istream is(&isb);
 
-        CompilationEngine engine(&is, &os);
+        CompilationEngine<XMLWriter> engine(&is, &os);
         engine.CompileClass();
 
         auto buffer = os.rdbuf();
@@ -108,7 +109,7 @@ namespace jack_compiler {
         std::stringbuf isb("class Test\n{ function void test(int a, boolean b) {}}");
         std::istream is(&isb);
 
-        CompilationEngine engine(&is, &os);
+        CompilationEngine<XMLWriter> engine(&is, &os);
         engine.CompileClass();
 
         auto buffer = os.rdbuf();
@@ -127,7 +128,6 @@ namespace jack_compiler {
                             "\t\t<identifier> test </identifier>\n"
                             "\t\t<symbol> ( </symbol>\n"
                             "\t\t<parameterList>\n"
-                                "\t\t\t<keyword> int </keyword>\n"
                                 "\t\t\t<keyword> int </keyword>\n"
                                 "\t\t\t<identifier> a </identifier>\n"
                                 "\t\t\t<symbol> , </symbol>\n"
@@ -153,7 +153,7 @@ namespace jack_compiler {
         std::stringbuf isb("class Test\n{ function void test(int a, boolean b) { var int c,d; var char e;}}");
         std::istream is(&isb);
 
-        CompilationEngine engine(&is, &os);
+        CompilationEngine<XMLWriter> engine(&is, &os);
         engine.CompileClass();
 
         auto buffer = os.rdbuf();
@@ -172,7 +172,6 @@ namespace jack_compiler {
                             "\t\t<identifier> test </identifier>\n"
                             "\t\t<symbol> ( </symbol>\n"
                             "\t\t<parameterList>\n"
-                                "\t\t\t<keyword> int </keyword>\n"
                                 "\t\t\t<keyword> int </keyword>\n"
                                 "\t\t\t<identifier> a </identifier>\n"
                                 "\t\t\t<symbol> , </symbol>\n"
@@ -212,7 +211,7 @@ namespace jack_compiler {
         std::stringbuf isb("class Test\n{ function void test() {var Array a; let a[0] = 3;}}");
         std::istream is(&isb);
 
-        CompilationEngine engine(&is, &os);
+        CompilationEngine<XMLWriter> engine(&is, &os);
         engine.CompileClass();
 
         auto buffer = os.rdbuf();
@@ -275,7 +274,7 @@ namespace jack_compiler {
         std::stringbuf isb("class Test\n{ function void test() {while (1-false) {}}}");
         std::istream is(&isb);
 
-        CompilationEngine engine(&is, &os);
+        CompilationEngine<XMLWriter> engine(&is, &os);
         engine.CompileClass();
 
         auto buffer = os.rdbuf();
@@ -332,7 +331,7 @@ namespace jack_compiler {
         std::stringbuf isb("class Test\n{ function void test() {return;}}");
         std::istream is(&isb);
 
-        CompilationEngine engine(&is, &os);
+        CompilationEngine<XMLWriter> engine(&is, &os);
         engine.CompileClass();
 
         auto buffer = os.rdbuf();
@@ -375,7 +374,7 @@ namespace jack_compiler {
         std::stringbuf isb("class Test\n{ function void test() {if ((~1+2) > 5) {} else {}}}");
         std::istream is(&isb);
 
-        CompilationEngine engine(&is, &os);
+        CompilationEngine<XMLWriter> engine(&is, &os);
         engine.CompileClass();
 
         auto buffer = os.rdbuf();
@@ -451,7 +450,7 @@ namespace jack_compiler {
         std::stringbuf isb("class Test\n{ function void test() {do Screen.test(3 + 5);}}");
         std::istream is(&isb);
 
-        CompilationEngine engine(&is, &os);
+        CompilationEngine<XMLWriter> engine(&is, &os);
         engine.CompileClass();
 
         auto buffer = os.rdbuf();
@@ -510,7 +509,7 @@ namespace jack_compiler {
         std::stringbuf isb("class Test\n{ function void test() {do Mock(x, y, z);}}");
         std::istream is(&isb);
 
-        CompilationEngine engine(&is, &os);
+        CompilationEngine<XMLWriter> engine(&is, &os);
         engine.CompileClass();
 
         auto buffer = os.rdbuf();
