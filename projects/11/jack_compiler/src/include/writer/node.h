@@ -14,8 +14,8 @@ namespace jack_compiler {
 class Node {
  public:
   union TokenUnion {
-    TERMINAL_TOKEN_TYPE terminal_token_;
-    NON_TERMINAL_TOKEN_TYPE non_terminal_token_;
+    TerminalTokenType terminal_token_;
+    NonTerminalTokenType non_terminal_token_;
   };
   Node(bool is_terminal_token, TokenUnion token_type,
        const std::string &content = "");

@@ -28,21 +28,21 @@ JackTokenizer::~JackTokenizer() {
 
 void JackTokenizer::CreateOutput(Writer* writer) {
     Node::TokenUnion token_union;
-    token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::TOKENS;
+    token_union.non_terminal_token_ = NonTerminalTokenType::kTokens;
     auto root = std::make_shared<Node>(false, token_union);
     while (HasMoreTokens()) {
         Advance();
         std::shared_ptr<Node> item;
         token_union.terminal_token_ = token_type_;
         switch (token_type_) {
-            case TERMINAL_TOKEN_TYPE::UNSPECIFY: {
+            case TerminalTokenType::kUnspecify: {
                 continue;
             }
-            case TERMINAL_TOKEN_TYPE::KEYWORD: {
-                item = std::make_shared<Node>(true, token_union, KEYWORD_STR_TABLE.at(key_word_));
+            case TerminalTokenType::kKeyword: {
+                item = std::make_shared<Node>(true, token_union, KeywordTypeString.at(key_word_));
                 break;
             }
-            case TERMINAL_TOKEN_TYPE::SYMBOL: {
+            case TerminalTokenType::kSymbol: {
                 std::string valid_symbol = symbol_;
                 if (valid_symbol == ">") {
                     valid_symbol = "&gt;";
@@ -54,15 +54,15 @@ void JackTokenizer::CreateOutput(Writer* writer) {
                 item = std::make_shared<Node>(true, token_union, valid_symbol);
                 break;
             }
-            case TERMINAL_TOKEN_TYPE::IDENTIFIER: {
+            case TerminalTokenType::kIdentifier: {
                 item = std::make_shared<Node>(true, token_union, identifier_);
                 break;
             }
-            case TERMINAL_TOKEN_TYPE::INT_CONST: {
+            case TerminalTokenType::kIntConst: {
                 item = std::make_shared<Node>(true, token_union, std::to_string(intval_));
                 break;
             }
-            case TERMINAL_TOKEN_TYPE::STRING_CONST: {
+            case TerminalTokenType::kStringConst: {
                 item = std::make_shared<Node>(true, token_union, strval_);
                 break;
             }
@@ -70,7 +70,7 @@ void JackTokenizer::CreateOutput(Writer* writer) {
                 throw std::exception();
         }
         root->AppendChild(std::move(item));
-        token_type_ = TERMINAL_TOKEN_TYPE::UNSPECIFY;
+        token_type_ = TerminalTokenType::kUnspecify;
     }
     writer->WriteToOutput(root);
 }
@@ -131,8 +131,8 @@ bool JackTokenizer::IsValidComment(char c) {
 }
 
 bool JackTokenizer::IsValidSymbol(char c) {
-    if (SYMBOL_TABLE.find(c) != SYMBOL_TABLE.end()) {
-        token_type_ = TERMINAL_TOKEN_TYPE::SYMBOL;
+    if (SymbolSet.find(c) != SymbolSet.end()) {
+        token_type_ = TerminalTokenType::kSymbol;
         symbol_ = c;
         return true;
     }
@@ -149,7 +149,7 @@ bool JackTokenizer::IsValidInteger(char c) {
         integer_string.push_back(c);
     }
 
-    token_type_ = TERMINAL_TOKEN_TYPE::INT_CONST;
+    token_type_ = TerminalTokenType::kIntConst;
     intval_ = std::stoi(integer_string);
     return true;
 }
@@ -168,7 +168,7 @@ bool JackTokenizer::IsValidString(char c) {
         str.push_back(c);
     }
 
-    token_type_ = TERMINAL_TOKEN_TYPE::STRING_CONST;
+    token_type_ = TerminalTokenType::kStringConst;
     strval_ = str;
     return true;
 }
@@ -195,15 +195,15 @@ bool JackTokenizer::IsValidIdentifier(char c) {
         return true;
     }
 
-    token_type_ = TERMINAL_TOKEN_TYPE::IDENTIFIER;
+    token_type_ = TerminalTokenType::kIdentifier;
     identifier_ = str;
     return true;
 }
 
 bool JackTokenizer::IsValidKeyWord(const std::string &keyword) {
-    auto iter = KEYWORD_TABLE.find(keyword);
-    if (iter != KEYWORD_TABLE.end()) {
-        token_type_ = TERMINAL_TOKEN_TYPE::KEYWORD;
+    auto iter = StringKeywordType.find(keyword);
+    if (iter != StringKeywordType.end()) {
+        token_type_ = TerminalTokenType::kKeyword;
         key_word_ = iter->second;
         return true;
     }

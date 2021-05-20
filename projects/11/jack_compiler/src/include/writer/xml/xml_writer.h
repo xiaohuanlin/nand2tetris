@@ -26,10 +26,10 @@ class XMLWriter : public Writer {
 
     content += "<";
     if (node->IsTerminalToken()) {
-      content += TERMINAL_TOKEN_TABLE.at(node->GetTokenType().terminal_token_);
+      content += TerminalTokenTypeString.at(node->GetTokenType().terminal_token_);
     } else {
       content +=
-          NON_TERMINAL_TOKEN_TABLE.at(node->GetTokenType().non_terminal_token_);
+          NonTerminalTokenTypeString.at(node->GetTokenType().non_terminal_token_);
     }
     return content + ">";
   }
@@ -42,10 +42,10 @@ class XMLWriter : public Writer {
 
     content += "</";
     if (node->IsTerminalToken()) {
-      content += TERMINAL_TOKEN_TABLE.at(node->GetTokenType().terminal_token_);
+      content += TerminalTokenTypeString.at(node->GetTokenType().terminal_token_);
     } else {
       content +=
-          NON_TERMINAL_TOKEN_TABLE.at(node->GetTokenType().non_terminal_token_);
+          NonTerminalTokenTypeString.at(node->GetTokenType().non_terminal_token_);
     }
     return content + ">\n";
   }

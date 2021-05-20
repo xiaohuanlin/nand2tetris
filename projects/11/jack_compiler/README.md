@@ -30,3 +30,15 @@ This testsuit contains all test files of this project.
 # Output file for checking
 1. The file for checking tokens: "xxx_token_analyze.xml"
 1. The file for checking final result: "xxx_analyze.xml"
+
+
+# note
+
+| function type | format | call manner | definition |
+| ---- | ---- | ---- | ---- |
+| function | className.function | push arguments | use arguments |
+| method | varName.method or (this.)method | push varName(or "this") and arguments | pop argument 0 to pointer segment |
+| constructor | className.constructor | push arguments | create "this" pointer and pop to pointer segment |
+
+
+In let statement, we should evaluate the right value before evaluate the index of array, otherwise the "that" segment will be overwrote.

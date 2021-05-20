@@ -32,10 +32,10 @@ class JackTokenizer {
    */
   void CreateOutput(Writer *writer);
 
-  inline TERMINAL_TOKEN_TYPE GetTokenType() const noexcept {
+  inline TerminalTokenType GetTokenType() const noexcept {
     return token_type_;
   };
-  inline KEYWORD_TYPE GetKeyword() const noexcept { return key_word_; };
+  inline KeywordType GetKeyword() const noexcept { return key_word_; };
   inline std::string GetSymbol() const noexcept { return symbol_; };
   inline std::string GetIdentifier() const noexcept { return identifier_; };
   inline int GetIntVal() const noexcept { return intval_; };
@@ -54,8 +54,8 @@ class JackTokenizer {
   bool IsValidKeyWord(const std::string &keyword);
   std::istream *input_;
   bool can_delete_input_ = false;
-  TERMINAL_TOKEN_TYPE token_type_;
-  KEYWORD_TYPE key_word_;
+  TerminalTokenType token_type_;
+  KeywordType key_word_;
   std::string symbol_;
   std::string identifier_;
   std::string strval_;

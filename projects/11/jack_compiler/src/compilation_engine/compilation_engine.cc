@@ -35,12 +35,12 @@ void CompilationEngine<WriterType>::MoveToNext() {
 template<class WriterType>
 void CompilationEngine<WriterType>::CompileClass() {
     Node::TokenUnion token_union;
-    token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::CLASS;
+    token_union.non_terminal_token_ = NonTerminalTokenType::kClass;
     root_ = std::make_shared<Node>(false, token_union);
 
     // class
     MoveToNext();
-    if (!CompileKeyword(root_, {KEYWORD_TYPE::CLASS})) {
+    if (!CompileKeyword(root_, {KeywordType::kClass})) {
         THROW_COMPILER_EXCEPT
     }
 
@@ -58,13 +58,13 @@ void CompilationEngine<WriterType>::CompileClass() {
 
     // class var dec
     MoveToNext();
-    while (CompileKeyword(nullptr, {KEYWORD_TYPE::FIELD, KEYWORD_TYPE::STATIC})) {
+    while (CompileKeyword(nullptr, {KeywordType::kField, KeywordType::kStatic})) {
         CompileClassVarDec(root_);
         MoveToNext();
     }
 
     // class subroutine
-    while (CompileKeyword(nullptr, {KEYWORD_TYPE::CONSTRUCTOR, KEYWORD_TYPE::FUNCTION, KEYWORD_TYPE::METHOD})) {
+    while (CompileKeyword(nullptr, {KeywordType::kConstructor, KeywordType::kFunction, KeywordType::kMethod})) {
         CompileSubroutine(root_);
         MoveToNext();
     }
@@ -79,11 +79,11 @@ void CompilationEngine<WriterType>::CompileClass() {
 template<class WriterType>
 void CompilationEngine<WriterType>::CompileClassVarDec(std::shared_ptr<Node> parent) {
     Node::TokenUnion token_union;
-    token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::CLASS_VAR_DEC;
+    token_union.non_terminal_token_ = NonTerminalTokenType::kClassVarDec;
     auto current = std::make_shared<Node>(false, token_union);
     parent->AppendChild(current);
     // static || field
-    if (!CompileKeyword(current, {KEYWORD_TYPE::STATIC, KEYWORD_TYPE::FIELD})) {
+    if (!CompileKeyword(current, {KeywordType::kStatic, KeywordType::kField})) {
         THROW_COMPILER_EXCEPT
     }
     // type: int, char, boolean, class_name
@@ -120,18 +120,18 @@ void CompilationEngine<WriterType>::CompileClassVarDec(std::shared_ptr<Node> par
 template<class WriterType>
 void CompilationEngine<WriterType>::CompileSubroutine(std::shared_ptr<Node> parent) {
     Node::TokenUnion token_union;
-    token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::SUBROUTINE_DEC;
+    token_union.non_terminal_token_ = NonTerminalTokenType::kSubroutineDec;
     auto current = std::make_shared<Node>(false, token_union);
     parent->AppendChild(current);
 
     // constructor || function || method
-    if (!CompileKeyword(current, {KEYWORD_TYPE::CONSTRUCTOR, KEYWORD_TYPE::FUNCTION, KEYWORD_TYPE::METHOD})) {
+    if (!CompileKeyword(current, {KeywordType::kConstructor, KeywordType::kFunction, KeywordType::kMethod})) {
         THROW_COMPILER_EXCEPT
     }
 
     // void || type
     MoveToNext();
-    if (!CompileKeyword(current, {KEYWORD_TYPE::VOID}) && !CompileType(current)) {
+    if (!CompileKeyword(current, {KeywordType::kVoid}) && !CompileType(current)) {
         THROW_COMPILER_EXCEPT
     }
 
@@ -162,7 +162,7 @@ void CompilationEngine<WriterType>::CompileSubroutine(std::shared_ptr<Node> pare
 template<class WriterType>
 void CompilationEngine<WriterType>::CompileSubroutineBody(std::shared_ptr<Node> parent) {
     Node::TokenUnion token_union;
-    token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::SUBROUTINE_BODY;
+    token_union.non_terminal_token_ = NonTerminalTokenType::kSubroutineBody;
     auto current = std::make_shared<Node>(false, token_union);
     parent->AppendChild(current);
 
@@ -173,7 +173,7 @@ void CompilationEngine<WriterType>::CompileSubroutineBody(std::shared_ptr<Node> 
 
     // varDec
     MoveToNext();
-    while (CompileKeyword(nullptr, {KEYWORD_TYPE::VAR})) {
+    while (CompileKeyword(nullptr, {KeywordType::kVar})) {
         CompileVarDec(current);
         MoveToNext();
     }
@@ -188,7 +188,7 @@ void CompilationEngine<WriterType>::CompileSubroutineBody(std::shared_ptr<Node> 
 template<class WriterType>
 void CompilationEngine<WriterType>::CompileParameterList(std::shared_ptr<Node> parent) {
     Node::TokenUnion token_union;
-    token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::PARAMETER_LIST;
+    token_union.non_terminal_token_ = NonTerminalTokenType::kParameterList;
     auto current = std::make_shared<Node>(false, token_union);
     parent->AppendChild(current);
 
@@ -228,12 +228,12 @@ void CompilationEngine<WriterType>::CompileParameterList(std::shared_ptr<Node> p
 template<class WriterType>
 void CompilationEngine<WriterType>::CompileVarDec(std::shared_ptr<Node> parent) {
     Node::TokenUnion token_union;
-    token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::VARDEC;
+    token_union.non_terminal_token_ = NonTerminalTokenType::kVarDec;
     auto current = std::make_shared<Node>(false, token_union);
     parent->AppendChild(current);
 
     // var
-    if (!CompileKeyword(current, {KEYWORD_TYPE::VAR})) {
+    if (!CompileKeyword(current, {KeywordType::kVar})) {
         THROW_COMPILER_EXCEPT
     }
 
@@ -270,30 +270,30 @@ void CompilationEngine<WriterType>::CompileVarDec(std::shared_ptr<Node> parent) 
 template<class WriterType>
 void CompilationEngine<WriterType>::CompileStatements(std::shared_ptr<Node> parent) {
     Node::TokenUnion token_union;
-    token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::STATEMENTS;
+    token_union.non_terminal_token_ = NonTerminalTokenType::kStatements;
     auto current = std::make_shared<Node>(false, token_union);
     parent->AppendChild(current);
 
-    while (CompileKeyword(nullptr, {KEYWORD_TYPE::LET, KEYWORD_TYPE::IF,
-            KEYWORD_TYPE::WHILE, KEYWORD_TYPE::DO, KEYWORD_TYPE::RETURN})) {
+    while (CompileKeyword(nullptr, {KeywordType::kLet, KeywordType::kIf,
+            KeywordType::kWhile, KeywordType::kDo, KeywordType::kReturn})) {
         switch (tokenizer_.GetKeyword()) {
-            case KEYWORD_TYPE::LET: {
+            case KeywordType::kLet: {
                 CompileLet(current);
                 break;
             }
-            case KEYWORD_TYPE::IF: {
+            case KeywordType::kIf: {
                 CompileIf(current);
                 break;
             }
-            case KEYWORD_TYPE::WHILE: {
+            case KeywordType::kWhile: {
                 CompileWhile(current);
                 break;
             }
-            case KEYWORD_TYPE::DO: {
+            case KeywordType::kDo: {
                 CompileDo(current);
                 break;
             }
-            case KEYWORD_TYPE::RETURN: {
+            case KeywordType::kReturn: {
                 CompileReturn(current);
                 break;
             }
@@ -308,12 +308,12 @@ template<class WriterType>
 void CompilationEngine<WriterType>::CompileDo(std::shared_ptr<Node> parent) {
     // todo unfinished
     Node::TokenUnion token_union;
-    token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::DO_STATEMENT;
+    token_union.non_terminal_token_ = NonTerminalTokenType::kDoStatement;
     auto current = std::make_shared<Node>(false, token_union);
     parent->AppendChild(current);
 
     // do
-    if (!CompileKeyword(current, {KEYWORD_TYPE::DO})) {
+    if (!CompileKeyword(current, {KeywordType::kDo})) {
         THROW_COMPILER_EXCEPT
     }
 
@@ -331,12 +331,12 @@ void CompilationEngine<WriterType>::CompileDo(std::shared_ptr<Node> parent) {
 template<class WriterType>
 void CompilationEngine<WriterType>::CompileLet(std::shared_ptr<Node> parent) {
     Node::TokenUnion token_union;
-    token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::LET_STATEMENT;
+    token_union.non_terminal_token_ = NonTerminalTokenType::kLetStatement;
     auto current = std::make_shared<Node>(false, token_union);
     parent->AppendChild(current);
 
     // let
-    if (!CompileKeyword(current, {KEYWORD_TYPE::LET})) {
+    if (!CompileKeyword(current, {KeywordType::kLet})) {
         THROW_COMPILER_EXCEPT
     }
 
@@ -381,12 +381,12 @@ void CompilationEngine<WriterType>::CompileLet(std::shared_ptr<Node> parent) {
 template<class WriterType>
 void CompilationEngine<WriterType>::CompileWhile(std::shared_ptr<Node> parent) {
     Node::TokenUnion token_union;
-    token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::WHILE_STATEMENT;
+    token_union.non_terminal_token_ = NonTerminalTokenType::kWhileStatement;
     auto current = std::make_shared<Node>(false, token_union);
     parent->AppendChild(current);
 
     // while
-    if (!CompileKeyword(current, {KEYWORD_TYPE::WHILE})) {
+    if (!CompileKeyword(current, {KeywordType::kWhile})) {
         THROW_COMPILER_EXCEPT
     }
 
@@ -425,12 +425,12 @@ void CompilationEngine<WriterType>::CompileWhile(std::shared_ptr<Node> parent) {
 template<class WriterType>
 void CompilationEngine<WriterType>::CompileReturn(std::shared_ptr<Node> parent) {
     Node::TokenUnion token_union;
-    token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::RETURN_STATEMENT;
+    token_union.non_terminal_token_ = NonTerminalTokenType::kReturnStatement;
     auto current = std::make_shared<Node>(false, token_union);
     parent->AppendChild(current);
 
     // return
-    if (!CompileKeyword(current, {KEYWORD_TYPE::RETURN})) {
+    if (!CompileKeyword(current, {KeywordType::kReturn})) {
         THROW_COMPILER_EXCEPT
     }
 
@@ -452,12 +452,12 @@ void CompilationEngine<WriterType>::CompileReturn(std::shared_ptr<Node> parent) 
 template<class WriterType>
 void CompilationEngine<WriterType>::CompileIf(std::shared_ptr<Node> parent) {
     Node::TokenUnion token_union;
-    token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::IF_STATEMENT;
+    token_union.non_terminal_token_ = NonTerminalTokenType::kIfStatement;
     auto current = std::make_shared<Node>(false, token_union);
     parent->AppendChild(current);
 
     // if
-    if (!CompileKeyword(current, {KEYWORD_TYPE::IF})) {
+    if (!CompileKeyword(current, {KeywordType::kIf})) {
         THROW_COMPILER_EXCEPT
     }
 
@@ -492,8 +492,8 @@ void CompilationEngine<WriterType>::CompileIf(std::shared_ptr<Node> parent) {
     }
 
     MoveToNext();
-    if (CompileKeyword(nullptr, {KEYWORD_TYPE::ELSE})) {
-        if (!CompileKeyword(current, {KEYWORD_TYPE::ELSE})) {
+    if (CompileKeyword(nullptr, {KeywordType::kElse})) {
+        if (!CompileKeyword(current, {KeywordType::kElse})) {
             THROW_COMPILER_EXCEPT
         }
 
@@ -518,7 +518,7 @@ void CompilationEngine<WriterType>::CompileIf(std::shared_ptr<Node> parent) {
 template<class WriterType>
 void CompilationEngine<WriterType>::CompileExpression(std::shared_ptr<Node> parent) {
     Node::TokenUnion token_union;
-    token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::EXPRESSION;
+    token_union.non_terminal_token_ = NonTerminalTokenType::kExpression;
     auto current = std::make_shared<Node>(false, token_union);
     parent->AppendChild(current);
 
@@ -539,13 +539,13 @@ void CompilationEngine<WriterType>::CompileExpression(std::shared_ptr<Node> pare
 template<class WriterType>
 void CompilationEngine<WriterType>::CompileTerm(std::shared_ptr<Node> parent) {
     Node::TokenUnion token_union;
-    token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::TERM;
+    token_union.non_terminal_token_ = NonTerminalTokenType::kTerm;
     auto current = std::make_shared<Node>(false, token_union);
     parent->AppendChild(current);
 
     if (CompileIntegerConst(current) ||
         CompileStringConst(current) ||
-        CompileKeyword(current, {KEYWORD_TYPE::TRUE, KEYWORD_TYPE::FALSE, KEYWORD_TYPE::NULL_, KEYWORD_TYPE::THIS})) {
+        CompileKeyword(current, {KeywordType::kTrue, KeywordType::kFalse, KeywordType::kNull, KeywordType::kThis})) {
         MoveToNext();
         return;
     }
@@ -624,7 +624,7 @@ void CompilationEngine<WriterType>::CompileTerm(std::shared_ptr<Node> parent) {
 template<class WriterType>
 void CompilationEngine<WriterType>::CompileExpressionList(std::shared_ptr<Node> parent) {
     Node::TokenUnion token_union;
-    token_union.non_terminal_token_ = NON_TERMINAL_TOKEN_TYPE::EXPRESSION_LIST;
+    token_union.non_terminal_token_ = NonTerminalTokenType::kExpressionList;
     auto current = std::make_shared<Node>(false, token_union);
     auto tmp = std::make_shared<Node>(false, token_union);
 
@@ -658,7 +658,7 @@ bool CompilationEngine<WriterType>::CompileUnaryOp(std::shared_ptr<Node> parent)
 
 template<class WriterType>
 bool CompilationEngine<WriterType>::CompileType(std::shared_ptr<Node> parent) {
-    if (!CompileKeyword(parent, {KEYWORD_TYPE::INT, KEYWORD_TYPE::CHAR, KEYWORD_TYPE::BOOLEAN}) &&
+    if (!CompileKeyword(parent, {KeywordType::kInt, KeywordType::kChar, KeywordType::kBoolean}) &&
         !CompileIdentifier(parent)) {
         return false;
     }
@@ -701,53 +701,44 @@ void CompilationEngine<WriterType>::CompileSubroutineCall(std::shared_ptr<Node> 
 }
 
 template<class WriterType>
-bool CompilationEngine<WriterType>::CompileKeyword(std::shared_ptr<Node> parent, std::vector<KEYWORD_TYPE> limit_types) {
-    if (tokenizer_.GetTokenType() != TERMINAL_TOKEN_TYPE::KEYWORD ||
+bool CompilationEngine<WriterType>::CompileKeyword(std::shared_ptr<Node> parent, std::vector<KeywordType> limit_types) {
+    if (tokenizer_.GetTokenType() != TerminalTokenType::kKeyword ||
         std::find(limit_types.begin(), limit_types.end(), tokenizer_.GetKeyword()) == limit_types.end()) {
         return false;
     }
     if (parent == nullptr) {
         return true;
     }
-    Node::TokenUnion token_union = {TERMINAL_TOKEN_TYPE::KEYWORD};
-    auto node = std::make_shared<Node>(true, token_union, KEYWORD_STR_TABLE.at(tokenizer_.GetKeyword()));
+    Node::TokenUnion token_union = {TerminalTokenType::kKeyword};
+    auto node = std::make_shared<Node>(true, token_union, KeywordTypeString.at(tokenizer_.GetKeyword()));
     parent->AppendChild(node);
     return true;
 }
 
 template<class WriterType>
 bool CompilationEngine<WriterType>::CompileSymbol(std::shared_ptr<Node> parent, std::vector<std::string> limit_symbols) {
-    if (tokenizer_.GetTokenType() != TERMINAL_TOKEN_TYPE::SYMBOL ||
+    if (tokenizer_.GetTokenType() != TerminalTokenType::kSymbol ||
         std::find(limit_symbols.begin(), limit_symbols.end(), tokenizer_.GetSymbol()) == limit_symbols.end()) {
         return false;
     }
     if (parent == nullptr) {
         return true;
     }
-    Node::TokenUnion token_union = {TERMINAL_TOKEN_TYPE::SYMBOL};
-
-    std::string valid_symbol = tokenizer_.GetSymbol();
-    if (valid_symbol == ">") {
-        valid_symbol = "&gt;";
-    } else if (valid_symbol == "<") {
-        valid_symbol = "&lt;";
-    } else if (valid_symbol == "&") {
-        valid_symbol = "&amp;";
-    }
-    auto node = std::make_shared<Node>(true, token_union, valid_symbol);
+    Node::TokenUnion token_union = {TerminalTokenType::kSymbol};
+    auto node = std::make_shared<Node>(true, token_union, tokenizer_.GetSymbol());
     parent->AppendChild(node);
     return true;
 }
 
 template<class WriterType>
 bool CompilationEngine<WriterType>::CompileIdentifier(std::shared_ptr<Node> parent) {
-    if (tokenizer_.GetTokenType() != TERMINAL_TOKEN_TYPE::IDENTIFIER) {
+    if (tokenizer_.GetTokenType() != TerminalTokenType::kIdentifier) {
         return false;
     }
     if (parent == nullptr) {
         return true;
     }
-    Node::TokenUnion token_union = {TERMINAL_TOKEN_TYPE::IDENTIFIER};
+    Node::TokenUnion token_union = {TerminalTokenType::kIdentifier};
     auto node = std::make_shared<Node>(true, token_union, tokenizer_.GetIdentifier());
     parent->AppendChild(node);
     return true;
@@ -755,13 +746,13 @@ bool CompilationEngine<WriterType>::CompileIdentifier(std::shared_ptr<Node> pare
 
 template<class WriterType>
 bool CompilationEngine<WriterType>::CompileIntegerConst(std::shared_ptr<Node> parent) {
-    if (tokenizer_.GetTokenType() != TERMINAL_TOKEN_TYPE::INT_CONST) {
+    if (tokenizer_.GetTokenType() != TerminalTokenType::kIntConst) {
         return false;
     }
     if (parent == nullptr) {
         return true;
     }
-    Node::TokenUnion token_union = {TERMINAL_TOKEN_TYPE::INT_CONST};
+    Node::TokenUnion token_union = {TerminalTokenType::kIntConst};
     auto node = std::make_shared<Node>(true, token_union, std::to_string(tokenizer_.GetIntVal()));
     parent->AppendChild(node);
     return true;
@@ -769,13 +760,13 @@ bool CompilationEngine<WriterType>::CompileIntegerConst(std::shared_ptr<Node> pa
 
 template<class WriterType>
 bool CompilationEngine<WriterType>::CompileStringConst(std::shared_ptr<Node> parent) {
-    if (tokenizer_.GetTokenType() != TERMINAL_TOKEN_TYPE::STRING_CONST) {
+    if (tokenizer_.GetTokenType() != TerminalTokenType::kStringConst) {
         return false;
     }
     if (parent == nullptr) {
         return true;
     }
-    Node::TokenUnion token_union = {TERMINAL_TOKEN_TYPE::STRING_CONST};
+    Node::TokenUnion token_union = {TerminalTokenType::kStringConst};
     auto node = std::make_shared<Node>(true, token_union, tokenizer_.GetStringVal());
     parent->AppendChild(node);
     return true;

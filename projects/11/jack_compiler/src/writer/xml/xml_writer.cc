@@ -5,7 +5,17 @@ std::string XMLWriter::Write(const std::shared_ptr<Node>& root, int level) {
     std::string end_label(WriteEndLabel(root, level));
 
     if (root->IsTerminalToken()) {
-        return WriteStartLabel(root, level) + " " + root->GetContent() + " " + WriteEndLabel(root);
+        std::string content = root->GetContent();
+        if (root->GetTokenType().terminal_token_ == TerminalTokenType::kSymbol) {
+            if (content == ">") {
+                content = "&gt;";
+            } else if (content == "<") {
+                content = "&lt;";
+            } else if (content == "&") {
+                content = "&amp;";
+            }
+        }
+        return WriteStartLabel(root, level) + " " + content + " " + WriteEndLabel(root);
     }
     std::string res;
     res += WriteStartLabel(root, level);

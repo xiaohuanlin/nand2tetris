@@ -15,144 +15,144 @@ constexpr static std::streamsize BUFFER_SIZE = 256;
 /**
  * All of the terminal token type
  */
-enum class TERMINAL_TOKEN_TYPE {
-  UNSPECIFY,  // dummy type
-  KEYWORD,
-  SYMBOL,
-  IDENTIFIER,
-  INT_CONST,
-  STRING_CONST,
+enum class TerminalTokenType {
+  kUnspecify,  // dummy type
+  kKeyword,
+  kSymbol,
+  kIdentifier,
+  kIntConst,
+  kStringConst,
 };
 
-static const std::unordered_map<TERMINAL_TOKEN_TYPE, std::string>
-    TERMINAL_TOKEN_TABLE{
-        {TERMINAL_TOKEN_TYPE::KEYWORD, "keyword"},
-        {TERMINAL_TOKEN_TYPE::SYMBOL, "symbol"},
-        {TERMINAL_TOKEN_TYPE::IDENTIFIER, "identifier"},
-        {TERMINAL_TOKEN_TYPE::INT_CONST, "integerConstant"},
-        {TERMINAL_TOKEN_TYPE::STRING_CONST, "stringConstant"},
+static const std::unordered_map<TerminalTokenType, std::string>
+    TerminalTokenTypeString {
+        {TerminalTokenType::kKeyword, "keyword"},
+        {TerminalTokenType::kSymbol, "symbol"},
+        {TerminalTokenType::kIdentifier, "identifier"},
+        {TerminalTokenType::kIntConst, "integerConstant"},
+        {TerminalTokenType::kStringConst, "stringConstant"},
     };
 
 /**
  * All of the non-terminal token type
  */
-enum class NON_TERMINAL_TOKEN_TYPE {
-  UNSPECIFY,  // dummy type
-  TOKENS,     // dummy type
-  CLASS,
-  CLASS_VAR_DEC,
-  SUBROUTINE_DEC,
-  PARAMETER_LIST,
-  SUBROUTINE_BODY,
-  VARDEC,
-  STATEMENTS,
-  WHILE_STATEMENT,
-  IF_STATEMENT,
-  RETURN_STATEMENT,
-  LET_STATEMENT,
-  DO_STATEMENT,
-  EXPRESSION,
-  TERM,
-  EXPRESSION_LIST
+enum class NonTerminalTokenType {
+  kUnspecify,  // dummy type
+  kTokens,     // dummy type
+  kClass,
+  kClassVarDec,
+  kSubroutineDec,
+  kParameterList,
+  kSubroutineBody,
+  kVarDec,
+  kStatements,
+  kWhileStatement,
+  kIfStatement,
+  kReturnStatement,
+  kLetStatement,
+  kDoStatement,
+  kExpression,
+  kTerm,
+  kExpressionList
 };
 
-static const std::unordered_map<NON_TERMINAL_TOKEN_TYPE, std::string>
-    NON_TERMINAL_TOKEN_TABLE{
-        {NON_TERMINAL_TOKEN_TYPE::CLASS, "class"},
-        {NON_TERMINAL_TOKEN_TYPE::TOKENS, "tokens"},
-        {NON_TERMINAL_TOKEN_TYPE::CLASS_VAR_DEC, "classVarDec"},
-        {NON_TERMINAL_TOKEN_TYPE::SUBROUTINE_DEC, "subroutineDec"},
-        {NON_TERMINAL_TOKEN_TYPE::PARAMETER_LIST, "parameterList"},
-        {NON_TERMINAL_TOKEN_TYPE::SUBROUTINE_BODY, "subroutineBody"},
-        {NON_TERMINAL_TOKEN_TYPE::VARDEC, "varDec"},
-        {NON_TERMINAL_TOKEN_TYPE::STATEMENTS, "statements"},
-        {NON_TERMINAL_TOKEN_TYPE::WHILE_STATEMENT, "whileStatement"},
-        {NON_TERMINAL_TOKEN_TYPE::IF_STATEMENT, "ifStatement"},
-        {NON_TERMINAL_TOKEN_TYPE::RETURN_STATEMENT, "returnStatement"},
-        {NON_TERMINAL_TOKEN_TYPE::LET_STATEMENT, "letStatement"},
-        {NON_TERMINAL_TOKEN_TYPE::DO_STATEMENT, "doStatement"},
-        {NON_TERMINAL_TOKEN_TYPE::EXPRESSION, "expression"},
-        {NON_TERMINAL_TOKEN_TYPE::TERM, "term"},
-        {NON_TERMINAL_TOKEN_TYPE::EXPRESSION_LIST, "expressionList"},
+static const std::unordered_map<NonTerminalTokenType, std::string>
+    NonTerminalTokenTypeString {
+        {NonTerminalTokenType::kClass, "class"},
+        {NonTerminalTokenType::kTokens, "tokens"},
+        {NonTerminalTokenType::kClassVarDec, "classVarDec"},
+        {NonTerminalTokenType::kSubroutineDec, "subroutineDec"},
+        {NonTerminalTokenType::kParameterList, "parameterList"},
+        {NonTerminalTokenType::kSubroutineBody, "subroutineBody"},
+        {NonTerminalTokenType::kVarDec, "varDec"},
+        {NonTerminalTokenType::kStatements, "statements"},
+        {NonTerminalTokenType::kWhileStatement, "whileStatement"},
+        {NonTerminalTokenType::kIfStatement, "ifStatement"},
+        {NonTerminalTokenType::kReturnStatement, "returnStatement"},
+        {NonTerminalTokenType::kLetStatement, "letStatement"},
+        {NonTerminalTokenType::kDoStatement, "doStatement"},
+        {NonTerminalTokenType::kExpression, "expression"},
+        {NonTerminalTokenType::kTerm, "term"},
+        {NonTerminalTokenType::kExpressionList, "expressionList"},
     };
 
 /**
  * All of the keyword type
  */
-enum class KEYWORD_TYPE {
-  CLASS,
-  METHOD,
-  INT,
-  FUNCTION,
-  BOOLEAN,
-  CONSTRUCTOR,
-  CHAR,
-  VOID,
-  VAR,
-  STATIC,
-  FIELD,
-  LET,
-  DO,
-  IF,
-  ELSE,
-  WHILE,
-  RETURN,
-  TRUE,
-  FALSE,
-  NULL_,
-  THIS,
+enum class KeywordType {
+  kClass,
+  kMethod,
+  kInt,
+  kFunction,
+  kBoolean,
+  kConstructor,
+  kChar,
+  kVoid,
+  kVar,
+  kStatic,
+  kField,
+  kLet,
+  kDo,
+  kIf,
+  kElse,
+  kWhile,
+  kReturn,
+  kTrue,
+  kFalse,
+  kNull,
+  kThis,
 };
 
-static const std::unordered_set<char> SYMBOL_TABLE{
+static const std::unordered_set<char> SymbolSet{
     '(', ')', '{', '}', '[', ']', ',', ';', '=', '.',
     '+', '-', '*', '/', '&', '|', '<', '>', '~'};
 
-static const std::unordered_map<std::string, KEYWORD_TYPE> KEYWORD_TABLE{
-    {"class", KEYWORD_TYPE::CLASS},
-    {"constructor", KEYWORD_TYPE::CONSTRUCTOR},
-    {"method", KEYWORD_TYPE::METHOD},
-    {"function", KEYWORD_TYPE::FUNCTION},
-    {"int", KEYWORD_TYPE::INT},
-    {"boolean", KEYWORD_TYPE::BOOLEAN},
-    {"char", KEYWORD_TYPE::CHAR},
-    {"void", KEYWORD_TYPE::VOID},
-    {"var", KEYWORD_TYPE::VAR},
-    {"static", KEYWORD_TYPE::STATIC},
-    {"field", KEYWORD_TYPE::FIELD},
-    {"let", KEYWORD_TYPE::LET},
-    {"do", KEYWORD_TYPE::DO},
-    {"if", KEYWORD_TYPE::IF},
-    {"else", KEYWORD_TYPE::ELSE},
-    {"while", KEYWORD_TYPE::WHILE},
-    {"return", KEYWORD_TYPE::RETURN},
-    {"true", KEYWORD_TYPE::TRUE},
-    {"false", KEYWORD_TYPE::FALSE},
-    {"null", KEYWORD_TYPE::NULL_},
-    {"this", KEYWORD_TYPE::THIS},
+static const std::unordered_map<std::string, KeywordType> StringKeywordType{
+    {"class", KeywordType::kClass},
+    {"constructor", KeywordType::kConstructor},
+    {"method", KeywordType::kMethod},
+    {"function", KeywordType::kFunction},
+    {"int", KeywordType::kInt},
+    {"boolean", KeywordType::kBoolean},
+    {"char", KeywordType::kChar},
+    {"void", KeywordType::kVoid},
+    {"var", KeywordType::kVar},
+    {"static", KeywordType::kStatic},
+    {"field", KeywordType::kField},
+    {"let", KeywordType::kLet},
+    {"do", KeywordType::kDo},
+    {"if", KeywordType::kIf},
+    {"else", KeywordType::kElse},
+    {"while", KeywordType::kWhile},
+    {"return", KeywordType::kReturn},
+    {"true", KeywordType::kTrue},
+    {"false", KeywordType::kFalse},
+    {"null", KeywordType::kNull},
+    {"this", KeywordType::kThis},
 };
 
-static const std::unordered_map<KEYWORD_TYPE, std::string> KEYWORD_STR_TABLE{
-    {KEYWORD_TYPE::CLASS, "class"},
-    {KEYWORD_TYPE::CONSTRUCTOR, "constructor"},
-    {KEYWORD_TYPE::METHOD, "method"},
-    {KEYWORD_TYPE::FUNCTION, "function"},
-    {KEYWORD_TYPE::INT, "int"},
-    {KEYWORD_TYPE::BOOLEAN, "boolean"},
-    {KEYWORD_TYPE::CHAR, "char"},
-    {KEYWORD_TYPE::VOID, "void"},
-    {KEYWORD_TYPE::VAR, "var"},
-    {KEYWORD_TYPE::STATIC, "static"},
-    {KEYWORD_TYPE::FIELD, "field"},
-    {KEYWORD_TYPE::LET, "let"},
-    {KEYWORD_TYPE::DO, "do"},
-    {KEYWORD_TYPE::IF, "if"},
-    {KEYWORD_TYPE::ELSE, "else"},
-    {KEYWORD_TYPE::WHILE, "while"},
-    {KEYWORD_TYPE::RETURN, "return"},
-    {KEYWORD_TYPE::TRUE, "true"},
-    {KEYWORD_TYPE::FALSE, "false"},
-    {KEYWORD_TYPE::NULL_, "null"},
-    {KEYWORD_TYPE::THIS, "this"},
+static const std::unordered_map<KeywordType, std::string> KeywordTypeString{
+    {KeywordType::kClass, "class"},
+    {KeywordType::kConstructor, "constructor"},
+    {KeywordType::kMethod, "method"},
+    {KeywordType::kFunction, "function"},
+    {KeywordType::kInt, "int"},
+    {KeywordType::kBoolean, "boolean"},
+    {KeywordType::kChar, "char"},
+    {KeywordType::kVoid, "void"},
+    {KeywordType::kVar, "var"},
+    {KeywordType::kStatic, "static"},
+    {KeywordType::kField, "field"},
+    {KeywordType::kLet, "let"},
+    {KeywordType::kDo, "do"},
+    {KeywordType::kIf, "if"},
+    {KeywordType::kElse, "else"},
+    {KeywordType::kWhile, "while"},
+    {KeywordType::kReturn, "return"},
+    {KeywordType::kTrue, "true"},
+    {KeywordType::kFalse, "false"},
+    {KeywordType::kNull, "null"},
+    {KeywordType::kThis, "this"},
 };
 
 enum class SymbolTableKind {
@@ -234,8 +234,8 @@ const static std::unordered_map<std::string, OpType> StringOpType {
     {"*", OpType::kMultiply},
     {"/", OpType::kDivide},
     {"=", OpType::kEq},
-    {"<", OpType::kGt},
-    {">", OpType::kLt},
+    {"<", OpType::kLt},
+    {">", OpType::kGt},
     {"&", OpType::kAnd},
     {"|", OpType::kOr},
 };

@@ -8,7 +8,7 @@
 
 namespace jack_compiler {
 int Main::Run(int argc, char* argv[]) {
-    if (argc < 2) {
+    if (argc < 3) {
         std::cout << "Need input file name" << std::endl;
         return 1;
     }

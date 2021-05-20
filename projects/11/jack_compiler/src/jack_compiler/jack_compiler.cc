@@ -27,13 +27,15 @@ void JackCompiler::Analyze(std::string writer_class) {
     for (const auto& file : files_) {
         size_t pos = file.find_last_of('.');
         std::string base_name(file, 0, pos);
-        const std::string output_file_name = base_name + ".vm";
-        std::ofstream output(output_file_name);
 
         if (writer_class == "xml_writer") {
+            const std::string output_file_name = base_name + ".xml";
+            std::ofstream output(output_file_name);
             CompilationEngine<XMLWriter> engine(file, output_file_name);
             engine.CompileClass();
         } else if (writer_class == "vm_writer") {
+            const std::string output_file_name = base_name + ".vm";
+            std::ofstream output(output_file_name);
             CompilationEngine<VMWriter> engine(file, output_file_name);
             engine.CompileClass();
         } else {

@@ -54,11 +54,11 @@ namespace jack_compiler {
 
         ASSERT_TRUE(jack.HasMoreTokens());
         jack.Advance();
-        ASSERT_EQ(TERMINAL_TOKEN_TYPE::SYMBOL, jack.GetTokenType());
+        ASSERT_EQ(TerminalTokenType::kSymbol, jack.GetTokenType());
         ASSERT_EQ("(", jack.GetSymbol());
         ASSERT_TRUE(jack.HasMoreTokens());
         jack.Advance();
-        ASSERT_EQ(TERMINAL_TOKEN_TYPE::SYMBOL, jack.GetTokenType());
+        ASSERT_EQ(TerminalTokenType::kSymbol, jack.GetTokenType());
         ASSERT_EQ(")", jack.GetSymbol());
         ASSERT_FALSE(jack.HasMoreTokens());
     }
@@ -70,10 +70,10 @@ namespace jack_compiler {
 
         ASSERT_TRUE(jack.HasMoreTokens());
         jack.Advance();
-        ASSERT_EQ(TERMINAL_TOKEN_TYPE::SYMBOL, jack.GetTokenType());
+        ASSERT_EQ(TerminalTokenType::kSymbol, jack.GetTokenType());
         ASSERT_EQ("-", jack.GetSymbol());
         jack.Advance();
-        ASSERT_EQ(TERMINAL_TOKEN_TYPE::INT_CONST, jack.GetTokenType());
+        ASSERT_EQ(TerminalTokenType::kIntConst, jack.GetTokenType());
         ASSERT_EQ(13, jack.GetIntVal());
         jack.Advance();
         ASSERT_FALSE(jack.HasMoreTokens());
@@ -86,22 +86,22 @@ namespace jack_compiler {
 
         ASSERT_TRUE(jack.HasMoreTokens());
         jack.Advance();
-        ASSERT_EQ(TERMINAL_TOKEN_TYPE::SYMBOL, jack.GetTokenType());
+        ASSERT_EQ(TerminalTokenType::kSymbol, jack.GetTokenType());
         ASSERT_EQ("-", jack.GetSymbol());
         jack.Advance();
-        ASSERT_EQ(TERMINAL_TOKEN_TYPE::INT_CONST, jack.GetTokenType());
+        ASSERT_EQ(TerminalTokenType::kIntConst, jack.GetTokenType());
         ASSERT_EQ(13, jack.GetIntVal());
         jack.Advance();
-        ASSERT_EQ(TERMINAL_TOKEN_TYPE::SYMBOL, jack.GetTokenType());
+        ASSERT_EQ(TerminalTokenType::kSymbol, jack.GetTokenType());
         ASSERT_EQ("+", jack.GetSymbol());
         jack.Advance();
-        ASSERT_EQ(TERMINAL_TOKEN_TYPE::INT_CONST, jack.GetTokenType());
+        ASSERT_EQ(TerminalTokenType::kIntConst, jack.GetTokenType());
         ASSERT_EQ(26, jack.GetIntVal());
         jack.Advance();
-        ASSERT_EQ(TERMINAL_TOKEN_TYPE::SYMBOL, jack.GetTokenType());
+        ASSERT_EQ(TerminalTokenType::kSymbol, jack.GetTokenType());
         ASSERT_EQ("=", jack.GetSymbol());
         jack.Advance();
-        ASSERT_EQ(TERMINAL_TOKEN_TYPE::INT_CONST, jack.GetTokenType());
+        ASSERT_EQ(TerminalTokenType::kIntConst, jack.GetTokenType());
         ASSERT_EQ(5, jack.GetIntVal());
         ASSERT_FALSE(jack.HasMoreTokens());
     }
@@ -113,13 +113,13 @@ namespace jack_compiler {
 
         ASSERT_TRUE(jack.HasMoreTokens());
         jack.Advance();
-        ASSERT_EQ(TERMINAL_TOKEN_TYPE::STRING_CONST, jack.GetTokenType());
+        ASSERT_EQ(TerminalTokenType::kStringConst, jack.GetTokenType());
         ASSERT_EQ("abc", jack.GetStringVal());
         jack.Advance();
-        ASSERT_EQ(TERMINAL_TOKEN_TYPE::SYMBOL, jack.GetTokenType());
+        ASSERT_EQ(TerminalTokenType::kSymbol, jack.GetTokenType());
         ASSERT_EQ("+", jack.GetSymbol());
         jack.Advance();
-        ASSERT_EQ(TERMINAL_TOKEN_TYPE::STRING_CONST, jack.GetTokenType());
+        ASSERT_EQ(TerminalTokenType::kStringConst, jack.GetTokenType());
         ASSERT_EQ("zzzz", jack.GetStringVal());
         ASSERT_FALSE(jack.HasMoreTokens());
     }
@@ -131,22 +131,22 @@ namespace jack_compiler {
 
         ASSERT_TRUE(jack.HasMoreTokens());
         jack.Advance();
-        ASSERT_EQ(TERMINAL_TOKEN_TYPE::KEYWORD, jack.GetTokenType());
-        ASSERT_EQ(static_cast<int>(KEYWORD_TYPE::FUNCTION), static_cast<int>(jack.GetKeyword()));
+        ASSERT_EQ(TerminalTokenType::kKeyword, jack.GetTokenType());
+        ASSERT_EQ(static_cast<int>(KeywordType::kFunction), static_cast<int>(jack.GetKeyword()));
         jack.Advance();
-        ASSERT_EQ(TERMINAL_TOKEN_TYPE::SYMBOL, jack.GetTokenType());
+        ASSERT_EQ(TerminalTokenType::kSymbol, jack.GetTokenType());
         ASSERT_EQ("{", jack.GetSymbol());
         jack.Advance();
-        ASSERT_EQ(TERMINAL_TOKEN_TYPE::KEYWORD, jack.GetTokenType());
-        ASSERT_EQ(static_cast<int>(KEYWORD_TYPE::RETURN), static_cast<int>(jack.GetKeyword()));
+        ASSERT_EQ(TerminalTokenType::kKeyword, jack.GetTokenType());
+        ASSERT_EQ(static_cast<int>(KeywordType::kReturn), static_cast<int>(jack.GetKeyword()));
         jack.Advance();
-        ASSERT_EQ(TERMINAL_TOKEN_TYPE::KEYWORD, jack.GetTokenType());
-        ASSERT_EQ(static_cast<int>(KEYWORD_TYPE::NULL_), static_cast<int>(jack.GetKeyword()));
+        ASSERT_EQ(TerminalTokenType::kKeyword, jack.GetTokenType());
+        ASSERT_EQ(static_cast<int>(KeywordType::kNull), static_cast<int>(jack.GetKeyword()));
         jack.Advance();
-        ASSERT_EQ(TERMINAL_TOKEN_TYPE::SYMBOL, jack.GetTokenType());
+        ASSERT_EQ(TerminalTokenType::kSymbol, jack.GetTokenType());
         ASSERT_EQ(";", jack.GetSymbol());
         jack.Advance();
-        ASSERT_EQ(TERMINAL_TOKEN_TYPE::SYMBOL, jack.GetTokenType());
+        ASSERT_EQ(TerminalTokenType::kSymbol, jack.GetTokenType());
         ASSERT_EQ("}", jack.GetSymbol());
         ASSERT_FALSE(jack.HasMoreTokens());
     }
@@ -158,22 +158,22 @@ namespace jack_compiler {
 
         ASSERT_TRUE(jack.HasMoreTokens());
         jack.Advance();
-        ASSERT_EQ(TERMINAL_TOKEN_TYPE::IDENTIFIER, jack.GetTokenType());
+        ASSERT_EQ(TerminalTokenType::kIdentifier, jack.GetTokenType());
         ASSERT_EQ("first", jack.GetIdentifier());
         jack.Advance();
-        ASSERT_EQ(TERMINAL_TOKEN_TYPE::SYMBOL, jack.GetTokenType());
+        ASSERT_EQ(TerminalTokenType::kSymbol, jack.GetTokenType());
         ASSERT_EQ("=", jack.GetSymbol());
         jack.Advance();
-        ASSERT_EQ(TERMINAL_TOKEN_TYPE::INT_CONST, jack.GetTokenType());
+        ASSERT_EQ(TerminalTokenType::kIntConst, jack.GetTokenType());
         ASSERT_EQ(15, jack.GetIntVal());
         jack.Advance();
-        ASSERT_EQ(TERMINAL_TOKEN_TYPE::SYMBOL, jack.GetTokenType());
+        ASSERT_EQ(TerminalTokenType::kSymbol, jack.GetTokenType());
         ASSERT_EQ("+", jack.GetSymbol());
         jack.Advance();
-        ASSERT_EQ(TERMINAL_TOKEN_TYPE::IDENTIFIER, jack.GetTokenType());
+        ASSERT_EQ(TerminalTokenType::kIdentifier, jack.GetTokenType());
         ASSERT_EQ("first", jack.GetIdentifier());
         jack.Advance();
-        ASSERT_EQ(TERMINAL_TOKEN_TYPE::IDENTIFIER, jack.GetTokenType());
+        ASSERT_EQ(TerminalTokenType::kIdentifier, jack.GetTokenType());
         ASSERT_EQ("second", jack.GetIdentifier());
         ASSERT_FALSE(jack.HasMoreTokens());
     }

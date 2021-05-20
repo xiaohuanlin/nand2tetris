@@ -1,0 +1,206 @@
+function SquareGame.new 1
+push constant 2
+call Memory.alloc 1
+pop local 0
+push local 0
+pop pointer 0
+push constant 0
+push constant 0
+push constant 30
+call Square.new 3
+pop this 0
+push constant 0
+pop this 1
+push pointer 0
+return
+function SquareGame.dispose 0
+push argument 0
+pop pointer 0
+push this 0
+call Square.dispose 1
+pop temp 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return
+function SquareGame.moveSquare 0
+push argument 0
+pop pointer 0
+push this 1
+push constant 1
+eq
+push constant 0
+eq
+if-goto SquareGame.moveSquare0NEXT
+push this 0
+call Square.moveUp 1
+pop temp 0
+goto SquareGame.moveSquare0REMAIN
+label SquareGame.moveSquare0NEXT
+label SquareGame.moveSquare0REMAIN
+push this 1
+push constant 2
+eq
+push constant 0
+eq
+if-goto SquareGame.moveSquare1NEXT
+push this 0
+call Square.moveDown 1
+pop temp 0
+goto SquareGame.moveSquare1REMAIN
+label SquareGame.moveSquare1NEXT
+label SquareGame.moveSquare1REMAIN
+push this 1
+push constant 3
+eq
+push constant 0
+eq
+if-goto SquareGame.moveSquare2NEXT
+push this 0
+call Square.moveLeft 1
+pop temp 0
+goto SquareGame.moveSquare2REMAIN
+label SquareGame.moveSquare2NEXT
+label SquareGame.moveSquare2REMAIN
+push this 1
+push constant 4
+eq
+push constant 0
+eq
+if-goto SquareGame.moveSquare3NEXT
+push this 0
+call Square.moveRight 1
+pop temp 0
+goto SquareGame.moveSquare3REMAIN
+label SquareGame.moveSquare3NEXT
+label SquareGame.moveSquare3REMAIN
+push constant 5
+call Sys.wait 1
+pop temp 0
+push constant 0
+return
+function SquareGame.run 2
+push argument 0
+pop pointer 0
+push constant 0
+pop local 1
+label SquareGame.run4START
+push local 1
+not
+push constant 0
+eq
+if-goto SquareGame.run4NEXT
+label SquareGame.run5START
+push local 0
+push constant 0
+eq
+push constant 0
+eq
+if-goto SquareGame.run5NEXT
+call Keyboard.keyPressed 0
+pop local 0
+push argument 0
+call SquareGame.moveSquare 1
+pop temp 0
+goto SquareGame.run5START
+label SquareGame.run5NEXT
+push local 0
+push constant 81
+eq
+push constant 0
+eq
+if-goto SquareGame.run6NEXT
+push constant 1
+neg
+pop local 1
+goto SquareGame.run6REMAIN
+label SquareGame.run6NEXT
+label SquareGame.run6REMAIN
+push local 0
+push constant 90
+eq
+push constant 0
+eq
+if-goto SquareGame.run7NEXT
+push this 0
+call Square.decSize 1
+pop temp 0
+goto SquareGame.run7REMAIN
+label SquareGame.run7NEXT
+label SquareGame.run7REMAIN
+push local 0
+push constant 88
+eq
+push constant 0
+eq
+if-goto SquareGame.run8NEXT
+push this 0
+call Square.incSize 1
+pop temp 0
+goto SquareGame.run8REMAIN
+label SquareGame.run8NEXT
+label SquareGame.run8REMAIN
+push local 0
+push constant 131
+eq
+push constant 0
+eq
+if-goto SquareGame.run9NEXT
+push constant 1
+pop this 1
+goto SquareGame.run9REMAIN
+label SquareGame.run9NEXT
+label SquareGame.run9REMAIN
+push local 0
+push constant 133
+eq
+push constant 0
+eq
+if-goto SquareGame.run10NEXT
+push constant 2
+pop this 1
+goto SquareGame.run10REMAIN
+label SquareGame.run10NEXT
+label SquareGame.run10REMAIN
+push local 0
+push constant 130
+eq
+push constant 0
+eq
+if-goto SquareGame.run11NEXT
+push constant 3
+pop this 1
+goto SquareGame.run11REMAIN
+label SquareGame.run11NEXT
+label SquareGame.run11REMAIN
+push local 0
+push constant 132
+eq
+push constant 0
+eq
+if-goto SquareGame.run12NEXT
+push constant 4
+pop this 1
+goto SquareGame.run12REMAIN
+label SquareGame.run12NEXT
+label SquareGame.run12REMAIN
+label SquareGame.run13START
+push local 0
+push constant 0
+eq
+not
+push constant 0
+eq
+if-goto SquareGame.run13NEXT
+call Keyboard.keyPressed 0
+pop local 0
+push argument 0
+call SquareGame.moveSquare 1
+pop temp 0
+goto SquareGame.run13START
+label SquareGame.run13NEXT
+goto SquareGame.run4START
+label SquareGame.run4NEXT
+push constant 0
+return

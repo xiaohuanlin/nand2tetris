@@ -95,7 +95,7 @@ class CompilationEngine {
    * Only compile the limited keywords. Return false if we can't compile it
    */
   bool CompileKeyword(std::shared_ptr<Node> parent,
-                      std::vector<KEYWORD_TYPE> limit_types);
+                      std::vector<KeywordType> limit_types);
   /**
    * Only compile the limited symbols. Return false if we can't compile it
    */
