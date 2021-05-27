@@ -71,7 +71,7 @@ int main(int argc, char* argv[]) {
                         // for symbol
                         value = symbol_table.GetAddress(symbol_or_number);
                     } else {
-                        // for varialbe
+                        // for variable
                         symbol_table.AddEntry(symbol_or_number, rom_address);
                         value = rom_address++;
                     }
