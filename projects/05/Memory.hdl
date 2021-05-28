@@ -30,9 +30,11 @@ CHIP Memory {
     // first bit could know if it is RAM
     // second bit could know if it is keyboard
     DMux4Way(in=load, sel=address[13..14], a=a, b=b, c=c, d=d);
-    RAM16K(in=in, load=a, address=address[0..13], out=out1);
-    Screen(in=in, load=b, address=address[0..12], out=out2);
-    RAM16K(in=in, load=c, address=address[0..13], out=out3);
-    Keyboard(out=out4);
-    Mux4Way16(a=out1, b=out2, c=out3, d=out4, sel=address[13..14], out=out);
+
+    Or(a=a, b=b, out=ram);
+    RAM16K(in=in, load=ram, address=address[0..13], out=out1);
+    Screen(in=in, load=c, address=address[0..12], out=out2);
+    Keyboard(out=out3);
+
+    Mux4Way16(a=out1, b=out1, c=out2, d=out3, sel=address[13..14], out=out);
 }

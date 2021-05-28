@@ -11,7 +11,7 @@ namespace jack_compiler {
         std::ifstream* open_file_p = new std::ifstream(file);
         if (!open_file_p->is_open()) {
             delete open_file_p;
-            std::cerr << "Output file can't be opend" << std::endl;
+            std::cerr << "Output file can't be opened" << std::endl;
             throw std::exception();
         }
         can_delete_input_ = true;
